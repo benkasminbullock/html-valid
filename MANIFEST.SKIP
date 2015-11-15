@@ -1,0 +1,14 @@
+build\.pl
+blib/.*
+.gitignore
+.git/.*
+Makefile$
+pm_to_blib
+MYMETA..*
+.*\.bak
+^HTML-Valid-[0-9\.]+/$
+^HTML-Valid-[0-9\.]+\.tar\.gz$
+^timesheet.txt$
+# Template for building pod file.
+^lib/HTML/Valid.pod.tmpl$
+^Valid.(?:c|o|bs)$
