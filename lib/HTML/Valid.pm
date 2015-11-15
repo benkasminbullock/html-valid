@@ -8,7 +8,16 @@ require Exporter;
 use warnings;
 use strict;
 use Carp;
-our $VERSION = 0.01;
+our $VERSION = '0.00_01';
 require XSLoader;
 XSLoader::load ('HTML::Valid', $VERSION);
+
+sub new
+{
+    my $htv = html_valid_new ();
+    bless $htv;
+    return $htv;
+}
+
+
 1;

@@ -1,0 +1,34 @@
+#!/home/ben/software/install/bin/perl
+use warnings;
+use strict;
+use utf8;
+use FindBin '$Bin';
+use lib '/home/ben/projects/html-valid/blib/lib';
+use lib '/home/ben/projects/html-valid/blib/arch';
+use HTML::Valid;
+use Path::Tiny;
+my $htv = HTML::Valid->new ();
+for my $file (@ARGV) {
+    my $content;
+{
+    # Yes, Path::Tiny, there is still no flock for NFS on BSD. Thank
+    # you for the information.
+    local $SIG{__WARN__} = sub {};
+    $content = path ($file)->slurp_utf8 ();
+};
+    my (undef, $errors) = $htv->run ($content);
+    if ($errors) {
+	$errors =~ s/Info:.*//;
+	$errors =~ s/^.*missing.*doctype.*\n//gi;
+	$errors =~ s/^\s*$//gsm;
+	$errors =~ s/^[0-9]+ warning.*$//gsm;
+#	$errors =~ s/^line ([0-9]+)(.*)/$file:$1: $2/gm;
+	$errors =~ s/^\n//gsm;
+	print $errors;
+    }
+}
+
+
+# Local variables:
+# mode: perl
+# End:

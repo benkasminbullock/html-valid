@@ -15,3 +15,5 @@ MYMETA.*
 META.*
 ppport.h
 lib/HTML/Valid.pod
+# Built by make-c-file.pl.
+tidy-html5.[cho]
