@@ -21,6 +21,13 @@ CODE:
 OUTPUT:
 	RETVAL
 
+void
+set_filename (htv, filename)
+	HTML::Valid htv;
+	const char * filename;
+CODE:
+	SetFilename (htv->tdoc, filename);
+
 void 
 run (htv, html)
 	HTML::Valid htv;

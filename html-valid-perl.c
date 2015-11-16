@@ -1,15 +1,6 @@
 typedef struct {
     TidyDoc tdoc;
-    TidyBuffer output;
-    TidyBuffer errbuf;
     int n_mallocs;
-    /* HTML Tidy cannot work out whether it has allocated a buffer by
-       itself, we have to do that for it, so these track whether we
-       can call the HTML Tidy freeing routines or not. Calling the
-       buffer freeing routines with unallocated buffers (zeroed
-       buffers) causes segmentation violation errors. */
-    unsigned output_allocated : 1;
-    unsigned errbuf_allocated : 1;
 }
 html_valid_t;
 
@@ -62,21 +53,42 @@ html_valid_run (html_valid_t * htv, SV * html,
     STRLEN html_length;
     SV * output;
     SV * errors;
+
+    TidyBuffer tidy_output = {0};
+    TidyBuffer tidy_errbuf = {0};
+
     /* First set these up sanely in case the stuff hits the fan. */
+
     * output_ptr = & PL_sv_undef;
     * errors_ptr = & PL_sv_undef;
+
+    /* Work around bug where allocator sometimes does not get set. */
+
+    CopyAllocator (htv->tdoc, & tidy_output);
+    CopyAllocator (htv->tdoc, & tidy_errbuf);
+
     html_string = SvPV (html, html_length);
-    CALL_TIDY (tidySetErrorBuffer (htv->tdoc, & htv->errbuf));
-    htv->errbuf_allocated = 1;
+    CALL_TIDY (tidySetErrorBuffer (htv->tdoc, & tidy_errbuf));
     htv->n_mallocs++;
     CALL_TIDY (tidyParseString (htv->tdoc, html_string));
     CALL_TIDY (tidyCleanAndRepair (htv->tdoc));
     CALL_TIDY (tidyRunDiagnostics (htv->tdoc));
-    CALL_TIDY (tidySaveBuffer (htv->tdoc, & htv->output));
-    htv->output_allocated = 1;
+    CALL_TIDY (tidySaveBuffer (htv->tdoc, & tidy_output));
     htv->n_mallocs++;
-    output = newSVpv ((char *) htv->output.bp, htv->output.size);
-    errors = newSVpv ((char *) htv->errbuf.bp, htv->errbuf.size);
+
+    /* Copy the contents of the buffers into the Perl scalars. */
+
+    output = newSVpv ((char *) tidy_output.bp, tidy_output.size);
+    errors = newSVpv ((char *) tidy_errbuf.bp, tidy_errbuf.size);
+
+    /* HTML Tidy randomly segfaults here due to "allocator" not being
+       set in some cases, hence the above CopyAllocator fix. */
+
+    tidyBufFree (& tidy_output);
+    htv->n_mallocs--;
+    tidyBufFree (& tidy_errbuf);
+    htv->n_mallocs--;
+
     /* These are not our mallocs, they are Perl's mallocs, so we don't
        increase htv->n_mallocs for these. After we return them, we no
        longer take care of these. */
@@ -88,16 +100,6 @@ html_valid_run (html_valid_t * htv, SV * html,
 static html_valid_status_t
 html_valid_destroy (html_valid_t * htv)
 {
-    if (htv->output_allocated) {
-	tidyBufFree (& htv->output);
-	htv->n_mallocs--;
-	htv->output_allocated = 0;
-    }
-    if (htv->errbuf_allocated) {
-	tidyBufFree (& htv->errbuf);
-	htv->n_mallocs--;
-	htv->errbuf_allocated = 0;
-    }
     tidyRelease (htv->tdoc);
     htv->n_mallocs--;
     return html_valid_ok;

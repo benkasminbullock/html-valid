@@ -14,3 +14,8 @@ MYMETA..*
 ^Valid.(?:c|o|bs)$
 ^build/example.*$
 ^tidy-html5\.o$
+^extra\.[ch]$
+^runtest\.pl$
+^clean\.pl$
+.*\.~[0-9]+~$
+^make-c-file\.pl$

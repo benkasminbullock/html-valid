@@ -33,9 +33,7 @@ my $stamp =<<EOF;
 
    $0
 
-   at
-
-   $time 
+   at $time 
 */
 EOF
 
@@ -58,6 +56,9 @@ sub main
     write_c_files ($srcdir, $coutput);
 }
 
+# Write the combined header file made out of the three or four
+# separate header files.
+
 sub write_public_h_file
 {
     my ($incdir, $houtput) = @_;
@@ -66,16 +67,18 @@ sub write_public_h_file
     }
     open my $out, ">", $houtput or die $!;
     print $out $stamp;
-    my @pubhfiles = ("$incdir/tidyplatform.h", "$incdir/tidyenum.h", "$incdir/tidy.h", "$incdir/tidybuffio.h");
+    my @pubhfiles = ("$incdir/tidyplatform.h", "$incdir/tidyenum.h",
+		     "$incdir/tidy.h", "$incdir/tidybuffio.h");
     for my $file (@pubhfiles) {
 	my $path = path ($file);
 	my $text = $path->slurp ();
-	while ($text =~ s!$include_local!/* $1 */!g) {
-	}
-    $text = disable_local_variables ($text);
-
+	$text =~ s!$include_local!/* $1 */!g;
+	$text = disable_local_variables ($text);
 	print $out $text;
     }
+    system ("cfunctions extra.c") == 0 or die "Error making extra.h";
+    my $extrah = path ("$Bin/extra.h")->slurp_utf8 ();
+    print $out $extrah;
     close $out;
     chmod 0444, $houtput;
 }
@@ -106,6 +109,8 @@ sub write_c_files
     for my $cfile (@cfiles) {
 	write_c_file ($out, $cfile);
     }
+    my $extra = path ("$Bin/extra.c")->slurp_utf8 ();
+    print $out $extra;
     close $out;
     chmod 0444, $coutput;
 }
