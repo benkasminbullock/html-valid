@@ -105,3 +105,29 @@ html_valid_destroy (html_valid_t * htv)
     return html_valid_ok;
 }
 
+static html_valid_status_t
+html_valid_tag_information (HV * hv)
+{
+    int i;
+    // n_html_tags is defined in html-tidy5.h as part of the "extra"
+    // material.
+    html_valid_tag_t tags[n_html_tags];
+    TagInformation (tags);
+    for (i = 0; i < n_html_tags; i++) {
+	int name_len;
+	AV * constants;
+	SV * constants_ref;
+	constants = newAV ();
+	av_push (constants, newSVuv (tags[i].versions));
+	av_push (constants, newSVuv (tags[i].model));
+
+	constants_ref = newRV_inc ((SV *) constants);
+	name_len = strlen (tags[i].name);
+/*
+	fprintf (stderr, "Storing %s (%d) into hash.\n",
+		 tags[i].name, name_len);
+*/
+	(void) hv_store (hv, tags[i].name, name_len, constants_ref, 0 /* no hash value */);
+    }
+    return html_valid_ok;
+}

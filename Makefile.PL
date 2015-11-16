@@ -31,6 +31,9 @@ WriteMakefile (
 #	    homepage => 'http://',
         },
     },
+    EXE_FILES => [
+	'script/htmlok',
+    ],
     MIN_PERL_VERSION => '5.006001',
     OBJECT => 'Valid.o tidy-html5.o',
 #    OPTIMIZE => '-g -Wall',

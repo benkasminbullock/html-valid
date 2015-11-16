@@ -55,3 +55,10 @@ CODE:
 	}
 	Safefree (htv);
 
+HV *
+tag_information ()
+CODE:
+	RETVAL = newHV ();
+	html_valid_tag_information (RETVAL);
+OUTPUT:
+	RETVAL

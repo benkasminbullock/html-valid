@@ -11,7 +11,7 @@ use Path::Tiny;
 
 # This is used for the line directives, but they turned out to be a nuisance.
 
-#use C::Utility ':all';
+use C::Utility ':all';
 
 use C::Tokenize '0.10', ':all';
 
@@ -20,6 +20,10 @@ use C::Tokenize '0.10', ':all';
 # is printed with the file and line number of the processing.
 
 my $verbose;
+
+# Print a line directive?
+
+my $line_directives;
 
 # Time now as string.
 
@@ -67,8 +71,13 @@ sub write_public_h_file
     }
     open my $out, ">", $houtput or die $!;
     print $out $stamp;
+    print_h_defines ($out);
+
+    # Order counts here.
+
     my @pubhfiles = ("$incdir/tidyplatform.h", "$incdir/tidyenum.h",
 		     "$incdir/tidy.h", "$incdir/tidybuffio.h");
+
     for my $file (@pubhfiles) {
 	my $path = path ($file);
 	my $text = $path->slurp ();
@@ -76,11 +85,31 @@ sub write_public_h_file
 	$text = disable_local_variables ($text);
 	print $out $text;
     }
+
+    # Add declarations for our extra things.
+
     system ("cfunctions extra.c") == 0 or die "Error making extra.h";
     my $extrah = path ("$Bin/extra.h")->slurp_utf8 ();
     print $out $extrah;
     close $out;
     chmod 0444, $houtput;
+}
+
+sub print_h_defines
+{
+    my ($out) = @_;
+    print $out <<EOF;
+
+/* We are not going to open any files using any facility of HTML Tidy,
+   so undefine all of these things so that the library compiles on
+   various operating systems. */
+
+#define PRESERVE_FILE_TIMES 0
+#define HAS_FUTIME 0
+
+/* -------------------------------------------------- */
+
+EOF
 }
 
 sub write_c_files
@@ -125,7 +154,9 @@ sub write_c_file
     my $id = $basename;
     # Make $id a safe C identifier.
     $id =~ s/[^A-Za-z0-9]/_/g;
-    #	line_directive ($out, 1, $basename);
+    if ($line_directives) {
+    	line_directive ($out, 1, $basename);
+    }
     $text =~ s!$include_local!/* $1 */!g;
     # Fix clashes with C names.
     $text =~ s!(DiscardContainer|CleanNode)!$1_$id!g;
@@ -163,10 +194,13 @@ sub write_c_file
     print $out $text;
 }
 
+# Disable the "local variables:" declarations in the file so that
+# Emacs doesn't keep printing questions about the "eval" in the Local
+# variables section.
+
 sub disable_local_variables
 {
-my ($text) = @_;
-    # Disable local variables
+    my ($text) = @_;
 
     # The following regex was overkill, but I'm leaving it here,
     # commented out, in case it becomes necessary again.
@@ -175,7 +209,7 @@ my ($text) = @_;
     # This is enough to fool Emacs.
 
     $text =~ s!local\s*variables:!DISABLEDLOCALVARIABLES!gism;
-return $text;
+    return $text;
 }
 
 sub write_include
@@ -185,6 +219,8 @@ sub write_include
 #include "tidy-html5.h"
 EOF
 }
+
+# Recursively copy the internal header files into our giant file.
 
 sub write_internal_header_files
 {
@@ -211,6 +247,8 @@ sub write_internal_header_files
 	include_h_file ($out, $hfile, \%hfiles, $verbose);
     }
 }
+
+# Recursive routine to copy header files.
 
 sub include_h_file
 {
@@ -247,7 +285,9 @@ sub include_h_file
 	}
     }
     my $basename = $path->basename ();
-#    line_directive ($out, 1, $basename);
+    if ($line_directives) {
+	line_directive ($out, 1, $basename);
+    }
     print $out $text;
     $hfiles->{$hfiles}{included} = 'ok';
 }

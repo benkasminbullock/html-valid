@@ -8,14 +8,17 @@ MYMETA..*
 .*\.bak
 ^HTML-Valid-[0-9\.]+/$
 ^HTML-Valid-[0-9\.]+\.tar\.gz$
-^timesheet.txt$
+^timesheet\.txt$
 # Template for building pod file.
-^lib/HTML/Valid.pod.tmpl$
+^.*\.pod\.tmpl$
+^lib/HTML/Valid\.pod\.tmpl$
+^lib/HTML/Valid/Tagset\.pod\.tmpl$
 ^Valid.(?:c|o|bs)$
 ^build/example.*$
 ^tidy-html5\.o$
 ^extra\.[ch]$
-^runtest\.pl$
+^xt/runtest\.pl$
 ^clean\.pl$
 .*\.~[0-9]+~$
 ^make-c-file\.pl$
+^extract-constants\.pl$
