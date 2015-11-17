@@ -24,6 +24,11 @@ MYMETA..*
 ^extract-constants\.pl$
 # Output from running the example programs
 ^examples/.*-out\.txt$
+# Not useful for CPAN
 ^make-pod\.pl$
-^html-tidy-copyright$
+# Template files
+^tmpl/.*$
+^tmpl/html-tidy-copyright$
 ^make-attr-type-hash\.pl$
+# Users don't need these tests.
+^xt/.*$

@@ -39,6 +39,7 @@ my $tt = Template->new (
 	$Bin,
 	pbtmpl (),
 	"$Bin/examples",
+	"$Bin/tmpl",
     ],
     ENCODING => 'UTF8',
     FILTERS => {

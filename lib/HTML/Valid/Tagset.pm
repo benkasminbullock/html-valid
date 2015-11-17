@@ -29,6 +29,8 @@ our @EXPORT_OK = qw/
     test_taginfo
     attributes
     all_attributes
+    attr_type
+    tag_attr_ok
 /;
 our %EXPORT_TAGS = (all => \@EXPORT_OK);
 use warnings;
@@ -555,9 +557,9 @@ my %attributes_key = (
 standard => 1,
 );
 
-sub attributes
+sub options
 {
-    my ($tag, %options) = @_;
+    my (%options) = @_;
     my $version;
     if (! $options{standard} || $options{standard} eq 'html5') {
 	$version = VERS_HTML5;
@@ -572,7 +574,7 @@ sub attributes
 	$version = VERS_HTML40;
     }
     else {
-	carp "Unknown HTML version variable $options{standard} in \"attributes ('$tag', standard => '$options{standard}')\": this should be either html2, html3, html4, html5 (the default), or empty for html5. Defaulting to html5.";
+	carp "Unknown HTML version variable $options{standard}: this should be either html2, html3, html4, html5 (the default), or empty for html5. Defaulting to html5.";
 	$version = VERS_HTML5;
     }
     for my $k (keys %options) {
@@ -580,6 +582,13 @@ sub attributes
 	    carp "Unknown key $k: valid keys for attributes are " . join (', ', sort keys %attributes_key) . "\n";
 	}
     }
+    return $version;
+}
+
+sub attributes
+{
+    my ($tag, %options) = @_;
+    my $version = options (%options);
     $tag = lc $tag;
     if (! $isKnown{$tag}) {
 	carp "Request for unknown HTML tag '$tag' in attributes: returning undefined value";
@@ -597,5 +606,36 @@ sub all_attributes
     return HTML::Valid::all_attributes ();
 }
 
+# Store of tag/version/attribute valid combinations.
+
+my %tag_attr;
+
+sub tag_attr_ok
+{
+    my ($tag, $attr, %options) = @_;
+    $tag = lc $tag;
+    if (! $isKnown{$tag}) {
+	carp "Request for unknown HTML tag '$tag' in attributes: returning undefined value";
+	return undef;
+    }
+    my $version = options (%options);
+    # If we haven't looked up attributes for this tag and version yet,
+    # look them up.
+    if (! $tag_attr{$tag}{$version}) {
+	my $tagid = $taginfo->{$tag}[0];
+	my $attrs = HTML::Valid::tag_attr ($tagid, $version);
+	for my $attribute (@$attrs) {
+	    # Store the attributes.
+	    $tag_attr{$tag}{$version}{$attribute} = 1;
+	}
+    }
+    return $tag_attr{$tag}{$version}{$attr};
+}
+
+sub attr_type
+{
+    my ($attr) = @_;
+    return $attr2type{$attr};
+}
 
 1;

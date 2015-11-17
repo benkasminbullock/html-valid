@@ -23,13 +23,13 @@ All tag names used are lowercase.
 =head2 This module and HTML::Tagset
 
 This is a drop-in replacement for L<HTML::Tagset>. However,
-HTML::Valid::Tagset is not a fork of HTML::Tagset. It uses the tables
-of HTML elements from a C program called L</HTML Tidy> (this is not
-the Perl module L<HTML::Tidy>).
+HTML::Valid::Tagset is mostly not based on HTML::Tagset. It uses the
+tables of HTML elements from a C program called L</HTML Tidy> (this is
+not the Perl module L<HTML::Tidy>).
 
-As far as it makes sense to do so, this module tries to be compatible
-with HTML::Tagset. Some errors in HTML::Tagset have been corrected in
-this module. See L</Issues with HTML::Tagset>.
+As far as possible, this module tries to be compatible with
+HTML::Tagset. Incompatibilities with HTML::Tagset are discussed in
+L</Issues with HTML::Tagset>.
 
 =head2 Validation
 
@@ -40,9 +40,7 @@ whether a tag is a known one.
 =head2 Terminology
 
 In the following documentation, a "hashset" is a hash being used as a
-set -- the hash conveys that its keys are there, and the actual values
-associated with the keys are not significant.  (But what values are
-there, are always true.)
+set. The actual values associated with the keys are not significant.
 
 =head1 VARIABLES
 
@@ -52,12 +50,14 @@ compatibility with HTML::Tagset refers to HTML::Tagset version 3.20.
 
 =head2 @allTags
 
-This contains all the tags as an array. It is exactly the same thing
-as the keys of L</%isKnown>.
+This contains all the tags as an array. The tags are sorted in
+order. It is exactly the same thing as the keys of L</%isKnown>.
+
+This is only in HTML::Valid::Tagset, not in HTML::Tagset.
 
 =head2 %canTighten
 
-This is a copy of the code from HTML::Tagset.
+This is copied from HTML::Tagset.
 
 =head2 %emptyElement
 
@@ -92,6 +92,8 @@ it's not provided for compatibility here.
 =head2 hashset %isCDATA_Parent
 
 This hashset includes all elements whose content is CDATA.
+
+This is copied from HTML::Tagset.
 
 =head2 %isFormElement
 
@@ -276,6 +278,32 @@ This returns valid attributes for HTML 2.0.
 
 =back
 
+=head2 tag_attr_ok
+
+    my $ok = tag_attr_ok ('a', 'onmouseover');
+    # $ok = 1
+    my $ok = tag_attr_ok ('table', 'cellspacing');
+    # $ok = undef, because "cellspacing" is not a valid attribute for
+    # table in HTML 5.
+
+This returns a true value if the attribute is allowed for the
+specified tag. The default version is HTML 5. Another version of HTML
+can be specified using the parameter C<standard>:
+
+    my $ok = tag_attr_ok ('html', 'onload', standard => 'html2');
+
+The possible versions are as in L</attributes>.
+
+=head2 attr_type
+
+     my $type = attr_type ('onmouseover');
+     # $type = 'script'
+
+This returns a text string containing likely type information for the
+attribute. This content is extracted from the internals of L</HTML Tidy>,
+and it may or may not be correct. This interface is experimental, and
+likely to change.
+
 =head1 COMPATIBILITY-ONLY VARIABLES
 
 These variables are present in this module for compatibility with
@@ -311,12 +339,7 @@ This is not implemented in HTML::Valid::Tagset.
 
 =head1 SEE ALSO
 
-=head2 HTML Tidy
-
-HTML Tidy is a program originally by Dave Raggett of the WWW
-Consortium. See L<http://www.tidy-html.org/> and the repository at
-L<https://github.com/htacg/tidy-html5> for the version of HTML Tidy
-which L<HTML::Valid> and this module are based on.
+[% INCLUDE "html-tidy.pod" %]
 
 =head2 CPAN modules
 
@@ -365,14 +388,6 @@ is not and was not legal HTML, since <table> itself is a block level
 element. (See L</%isBlock> for testing for block level elements.)
 
 So in this module, L</@p_closure_barriers> is an empty set.
-
-=item C<%is_CDATAParent> should be true for all XML elements
-
-In HTML::Tagset, this contains true values for the elements script,
-style, xmp, listing, and plaintext. However, as far as I understand,
-this is just a mistake, CDATA is only relevant to XML, and any XML
-element whatsoever can contain a CDATA section. For compatibility, in
-this module L</%is_CDATAParent> returns a list of all the tags.
 
 =item C<%is_Possible_Strict_P_Content> doesn't really make sense
 
@@ -424,8 +439,8 @@ L<https://rt.cpan.org/Public/Bug/Display.html?id=109018>.
 
 =head1 COPYRIGHT & LICENSE
 
-Portions of the documentation and tests of this module are taken from
-L<HTML::Tagset>, which bears the following copyright notice.
+Portions of this module are taken from L<HTML::Tagset>, which bears
+the following copyright notice.
 
 Copyright 1995-2000 Gisle Aas.
 
@@ -436,8 +451,7 @@ Copyright 2005-2008 Andy Lester.
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
-Please note that the functional part of this code is not a fork of
-HTML::Tagset, it is based on HTML Tidy (the C program, not the Perl
-module L<HTML::Tidy>).
+However, the bulk of HTML::Valid::Tagset is not a fork of
+HTML::Tagset, it is based on L</HTML Tidy>.
 
 [% INCLUDE "html-tidy-copyright" %]

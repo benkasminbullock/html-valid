@@ -13,7 +13,6 @@ use Perl::Build::Pod 'pod_checker';
 my $filepath = "$Bin/../lib/HTML/Valid.pod";
 my $errors = pod_checker ($filepath);
 ok (@$errors == 0, "No errors");
-
 my $hvt_filepath = "$Bin/../lib/HTML/Valid/Tagset.pod";
 my $hvt_errors = pod_checker ($hvt_filepath);
 ok (@$hvt_errors == 0, "No errors");

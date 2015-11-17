@@ -21,7 +21,9 @@ corresponds to L</HTML Tidy> version [% html_tidy_version %].
 =head1 DESCRIPTION
 
 Validate/repair HTML. This module is based on L</HTML Tidy>, but not
-on the Perl module L<HTML::Tidy>.
+on the Perl module L<HTML::Tidy>. However, you do not need to install
+HTML Tidy before installing this, because the library is contained in
+the distribution.
 
 =head1 FUNCTIONS
 
@@ -44,22 +46,12 @@ Get the tidy HTML output and errors.
 =head1 SCRIPT
 
 There is a script called "htmlok" which runs on files and prints
-errors. It is extremely flaky at the moment.
+errors. It is extremely flaky at the moment. This is an early test
+release.
 
 =head1 SEE ALSO
 
-=head2 HTML Tidy
-
-This is a program and a library in C for improving HTML. HTML::Valid
-is based on this project.
-
-=over
-
-=item * L<HTML Tidy web page|http://www.html-tidy.org/>
-
-=item * L<HTML Tidy git repository|https://github.com/htacg/tidy-html5>
-
-=back
+[% INCLUDE "html-tidy.pod" %]
 
 =head2 Online HTML validators
 
@@ -70,6 +62,10 @@ You may like to try these validators for checking your HTML.
 =item L<http://www.onlinewebcheck.com/>
 
 Commercial HTML validator.
+
+=item L<http://watson.addy.com/>
+
+Doesn't find any mistakes.
 
 =item L<https://validator.w3.org/>
 
@@ -88,6 +84,10 @@ New W3 Consortium validator.
 =item L<HTML::Tidy>
 
 =item L<HTML::Lint>
+
+=item HTML::Validator
+
+There is another module called HTML::Validator but only found on Backpan.
 
 =back
 

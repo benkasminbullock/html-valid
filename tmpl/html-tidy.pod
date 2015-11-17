@@ -1,0 +1,14 @@
+=head2 HTML Tidy
+
+This is a program and a library in C for improving HTML. It was
+originally written by Dave Raggett of the W3 Consortium. HTML::Valid
+is based on this project.
+
+=over
+
+=item * L<HTML Tidy web page|http://www.html-tidy.org/>
+
+=item * L<HTML Tidy git repository|https://github.com/htacg/tidy-html5>
+
+=back
+
