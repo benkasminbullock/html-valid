@@ -3,6 +3,10 @@
 # Make the tidy-html5 library into one big C file for use in a Perl
 # project to validate HTML.
 
+# This file is specific to version 5.0.0 of tidy-html5. The maintainer
+# should expect to have to overhaul this with each new version of
+# tidy-html5, as the changes made here become less relevant.
+
 use warnings;
 use strict;
 use utf8;
@@ -83,6 +87,7 @@ sub write_public_h_file
 	my $text = $path->slurp ();
 	$text =~ s!$include_local!/* $1 */!g;
 	$text = disable_local_variables ($text);
+	$text = remove_typedefs ($text);
 	print $out $text;
     }
 
@@ -190,9 +195,30 @@ sub write_c_file
     }
 
     $text = disable_local_variables ($text);
+    $text = remove_typedefs ($text);
 
     print $out $text;
 }
+
+# Remove typedefs for "uint" and "ulong".
+
+# This is due to Darwin not being supported:
+
+# http://matrix.cpantesters.org/?dist=HTML-Valid%200.00_02
+
+# and the typedefs for uint and ulong are not formed correctly for
+# Darwin OS.
+
+sub remove_typedefs
+{
+    my ($text) = @_;
+    $text =~ s!(#\s*undef.*(?:uint|ulong))!/* COMMENTED OUT TYPEDEF by $0: $1 */!g;
+    $text =~ s!(typedef.*(?:uint|ulong);)!/* COMMENTED OUT TYPEDEF by $0: $1 */!g;
+    $text =~ s/\buint\b/unsigned int/g;
+    $text =~ s/\bulong\b/unsigned int/g;
+    return $text;
+}
+
 
 # Disable the "local variables:" declarations in the file so that
 # Emacs doesn't keep printing questions about the "eval" in the Local
@@ -288,6 +314,7 @@ sub include_h_file
     if ($line_directives) {
 	line_directive ($out, 1, $basename);
     }
+    $text = remove_typedefs ($text);
     print $out $text;
     $hfiles->{$hfiles}{included} = 'ok';
 }

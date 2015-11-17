@@ -118,6 +118,8 @@ html_valid_tag_information (HV * hv)
 	AV * constants;
 	SV * constants_ref;
 	constants = newAV ();
+	// Store the ID for reverse lookup of attributes.
+	av_push (constants, newSVuv (i));
 	av_push (constants, newSVuv (tags[i].versions));
 	av_push (constants, newSVuv (tags[i].model));
 
@@ -128,6 +130,58 @@ html_valid_tag_information (HV * hv)
 		 tags[i].name, name_len);
 */
 	(void) hv_store (hv, tags[i].name, name_len, constants_ref, 0 /* no hash value */);
+    }
+    return html_valid_ok;
+}
+
+html_valid_status_t
+html_valid_tag_attr (AV * av, unsigned int tag_id, unsigned int version)
+{
+    const char * yes_no[n_attributes];
+    int i;
+    int j;
+    int n_attr;
+    TagAttributes (tag_id, version, yes_no, & n_attr);
+    if (av_len (av) != -1) {
+	fprintf (stderr, "%s:%d: unexpected non-empty array with %d elements",
+		 __FILE__, __LINE__, (int) (av_len (av) + 1));
+	return html_valid_ok;
+    }
+    if (n_attr == 0) {
+	return html_valid_ok;
+    }
+    j = 0;
+    for (i = 0; i < n_attributes; i++) {
+	if (yes_no[i]) {
+	    SV * attribute;
+	    attribute = newSVpv (yes_no[i], strlen (yes_no[i]));
+	    av_push (av, attribute);
+//	    fprintf (stderr, "Adding %d, %s\n", j, yes_no[i]);
+	    j++;
+	}
+    }
+    if (j != n_attr) {
+	fprintf (stderr, "%s:%d: inconsistency between expected number of attributes %d and stored number %d\n",
+		 __FILE__, __LINE__, n_attr, j);
+    }
+    return html_valid_ok;
+}
+
+html_valid_status_t
+html_valid_all_attributes (AV * av)
+{
+    const char * yes_no[n_attributes];
+    int i;
+    TagAllAttributes (yes_no);
+    if (av_len (av) != -1) {
+	fprintf (stderr, "%s:%d: unexpected non-empty array with %d elements",
+		 __FILE__, __LINE__, (int) (av_len (av) + 1));
+	return html_valid_ok;
+    }
+    for (i = 0; i < n_attributes; i++) {
+	SV * attribute;
+	attribute = newSVpv (yes_no[i], strlen (yes_no[i]));
+	av_push (av, attribute);
     }
     return html_valid_ok;
 }

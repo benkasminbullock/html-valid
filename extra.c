@@ -158,10 +158,11 @@ html_valid_tag_t;
    final line of tag_defs. */
 
 const int n_html_tags = (sizeof (tag_defs) / sizeof (Dict) - 1);
+const int n_attributes = (sizeof (attribute_defs) / sizeof (Attribute) - 1);
 
 /* Export the tag information. */
 
-void TagInformation( html_valid_tag_t * tags )
+void TagInformation (html_valid_tag_t * tags)
 {
     int i;
     for (i = 0; i < n_html_tags; i++) {
@@ -169,5 +170,70 @@ void TagInformation( html_valid_tag_t * tags )
 	tags[i].versions = tag_defs[i].versions;
 	tags[i].model = tag_defs[i].model;
 //	fprintf (stderr, "%s %u %u\n", tags[i].name, tags[i].versions, tags[i].model);
+    }
+}
+
+void TagAttributes (unsigned int tag_id, unsigned int version,
+		    const char ** yes_no, int * n_attr_ptr)
+{
+    int i;
+    Dict * tag_def;
+    AttrVersion const * attrvers;
+    int n_attr;
+    if (tag_id >= n_html_tags) {
+	fprintf (stderr, "%s:%d: bad tag id %d\n",
+		 __FILE__, __LINE__, tag_id);
+	return;
+    }
+    tag_def = & tag_defs[tag_id];
+    attrvers = tag_def->attrvers;
+    n_attr = 0;
+    for (i = 0; i < n_attributes; i++) {
+	yes_no[i] = 0;
+    }
+    for (i = 0; attrvers[i].attribute != TidyAttr_UNKNOWN; i++) {
+	if (version & attrvers[i].versions) {
+	    int attribute;
+	    char * name;
+	    attribute = attrvers[i].attribute;
+
+	    /* First check that the number "attribute" makes sense. */
+
+	    if (attribute >= n_attributes || attribute < 0) {
+		fprintf (stderr, "%s:%d: Attribute %d of %d "
+			 "has attribute id %d "
+			 "overflowing the maximum value %d.\n",
+			 __FILE__, __LINE__,
+			 i, tag_id, attribute, n_attributes);
+		return;
+	    }
+	    name = attribute_defs[attribute].name;
+
+/*
+	    fprintf (stderr, "Tag %d (%s) has attribute %d (%s)\n",
+		     tag_id, tag_defs[tag_id].name, attribute,
+		     name);
+*/
+	    if (! yes_no[attribute]) {
+		yes_no[attribute] = name;
+//		fprintf (stderr, "Adding name number %d at %d - %s\n",
+//			 n_attr, attribute, name);
+		n_attr++;
+	    }
+	    else {
+		// Commented out for 5.0.0 since there are several
+		// collisions.
+//		fprintf (stderr, "%s:%d: Collision %s\n", __FILE__, __LINE__, yes_no[attribute]);
+	    }
+	}
+    }
+    * n_attr_ptr = n_attr;
+}
+
+void TagAllAttributes (const char ** yes_no)
+{
+    int i;
+    for (i = 0; i < n_attributes; i++) {
+	yes_no[i] = attribute_defs[i].name;
     }
 }

@@ -62,3 +62,23 @@ CODE:
 	html_valid_tag_information (RETVAL);
 OUTPUT:
 	RETVAL
+
+AV *
+tag_attr (tag_id, version)
+	unsigned int tag_id;
+	unsigned int version;
+CODE:
+	RETVAL = newAV ();
+	html_valid_tag_attr (RETVAL, tag_id, version);
+OUTPUT:
+	RETVAL
+
+AV *
+all_attributes ()
+CODE:
+	RETVAL = newAV ();
+	html_valid_all_attributes (RETVAL);
+OUTPUT:
+	RETVAL
+
+

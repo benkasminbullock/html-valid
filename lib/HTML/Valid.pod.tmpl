@@ -3,60 +3,99 @@
 
 =head1 NAME
 
-HTML::Valid - step on a crack
+HTML::Valid - tidy/validate HTML
 
 =head1 SYNOPSIS
 
-    use HTML::Valid;
-    # Break your momma's back
+[% INCLUDE "synopsis.pl" | xtidy %]
+
+outputs
+
+[% INCLUDE "synopsis-out.txt" | xtidy %]
+
+=head1 VERSION
+
+This document describes HTML::Valid version [% version %]. This
+corresponds to L</HTML Tidy> version [% html_tidy_version %].
 
 =head1 DESCRIPTION
 
-When a problem comes along
+Validate/repair HTML. This module is based on L</HTML Tidy>, but not
+on the Perl module L<HTML::Tidy>.
 
 =head1 FUNCTIONS
 
-=head2 whipit
+=head2 new
 
-You must whip it
+    my $htv = HTML::Valid->new ();
+
+=head2 set_filename
+
+    $htv->set_filename ('file.html');
+
+Set the file name for error reporting to F<file.html>.
+
+=head2 run
+
+    my ($output, $errors) = $htv->run ($content);
+
+Get the tidy HTML output and errors.
+
+=head1 SCRIPT
+
+There is a script called "htmlok" which runs on files and prints
+errors. It is extremely flaky at the moment.
+
+=head1 SEE ALSO
+
+=head2 HTML Tidy
+
+This is a program and a library in C for improving HTML. HTML::Valid
+is based on this project.
+
+=over
+
+=item * L<HTML Tidy web page|http://www.html-tidy.org/>
+
+=item * L<HTML Tidy git repository|https://github.com/htacg/tidy-html5>
+
+=back
+
+=head2 Online HTML validators
+
+You may like to try these validators for checking your HTML.
+
+=over
+
+=item L<http://www.onlinewebcheck.com/>
+
+Commercial HTML validator.
+
+=item L<https://validator.w3.org/>
+
+W3 Consortium validator.
+
+=item L<https://validator.w3.org/nu/>
+
+New W3 Consortium validator.
+
+=back
+
+=head2 CPAN modules
+
+=over
+
+=item L<HTML::Tidy>
+
+=item L<HTML::Lint>
+
+=back
+
+=head1 AUTHOR
+
+Ben Bullock <bkb@cpan.org>
 
 =head1 COPYRIGHT AND LICENCE
 
-HTML::Valid is based on HTML Tidy, which is under the following copyright:
-
-    Copyright (c) 1998-2008 World Wide Web Consortium
-    (Massachusetts Institute of Technology, European Research
-    Consortium for Informatics and Mathematics, Keio University).
-    All Rights Reserved.
-
-    COPYRIGHT NOTICE:
-
-    This software and documentation is provided "as is," and
-    the copyright holders and contributing author(s) make no
-    representations or warranties, express or implied, including
-    but not limited to, warranties of merchantability or fitness
-    for any particular purpose or that the use of the software or
-    documentation will not infringe any third party patents,
-    copyrights, trademarks or other rights.
-
-    The copyright holders and contributing author(s) will not be held
-    liable for any direct, indirect, special or consequential damages
-    arising out of any use of the software or documentation, even if
-    advised of the possibility of such damage.
-
-    Permission is hereby granted to use, copy, modify, and distribute
-    this source code, or portions hereof, documentation and executables,
-    for any purpose, without fee, subject to the following restrictions:
-
-    1. The origin of this source code must not be misrepresented.
-    2. Altered versions must be plainly marked as such and must
-    not be misrepresented as being the original source.
-    3. This Copyright notice may not be removed or altered from any
-    source or altered source distribution.
-
-The Perl parts of this distribution are copyright (C) 2015 Ben Bullock
-and may be used under either the above licence terms, or the usual
-Perl conditions, either the GNU General Public Licence or the Perl
-Artistic Licence.
-
+[% INCLUDE "html-tidy-copyright" %]
 

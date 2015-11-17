@@ -22,3 +22,8 @@ MYMETA..*
 .*\.~[0-9]+~$
 ^make-c-file\.pl$
 ^extract-constants\.pl$
+# Output from running the example programs
+^examples/.*-out\.txt$
+^make-pod\.pl$
+^html-tidy-copyright$
+^make-attr-type-hash\.pl$

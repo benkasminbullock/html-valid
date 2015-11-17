@@ -4,10 +4,11 @@ use strict;
 use Perl::Build;
 perl_build (
     pre => './make-c-file.pl',
-    pod => [
-	'lib/HTML/Valid.pod',
-	'lib/HTML/Valid/Tagset.pod',
-    ],
+    make_pod => './make-pod.pl',
+# pod => [
+# 	'lib/HTML/Valid.pod',
+# 	'lib/HTML/Valid/Tagset.pod',
+#     ],
     clean => './clean.pl',
 );
 exit;

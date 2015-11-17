@@ -13,7 +13,8 @@ use HTML::Valid::Tagset ':all';
 my $taginfo = test_taginfo ('a');
 ok ($taginfo, "got tag info for a element");
 ok (ref $taginfo eq 'ARRAY', "a element tag info is an array");
-ok (scalar (@$taginfo) == 2, "a element tag info has two members");
+ok (scalar (@$taginfo) == 3, "a element tag info has two members");
+ok ($taginfo->[0] == 1, "a is the first element");
 
 ok ($emptyElement{'br'}, "br is among the empty elements");
 ok ($isTableElement{'tr'}, "<tr> is among the table elements");
