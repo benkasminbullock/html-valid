@@ -112,6 +112,10 @@ sub print_h_defines
 #define PRESERVE_FILE_TIMES 0
 #define HAS_FUTIME 0
 
+/* Undefine this as we do not need any encoding support. */
+
+#undef TIDY_WIN32_MLANG_SUPPORT
+
 /* -------------------------------------------------- */
 
 EOF

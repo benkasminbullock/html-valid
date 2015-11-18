@@ -61,4 +61,9 @@ for (qw(
     ok ($isPhraseMarkup{$_}, "<$_> is phrasal (inline)");
 }
 
+TODO: {
+    local $TODO = 'do not include the flagging tags from the tag list';
+    ok (! $isKnown{'unknown!'});
+};
+
 done_testing ();
