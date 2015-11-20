@@ -28,6 +28,14 @@ set_filename (htv, filename)
 CODE:
 	SetFilename (htv->tdoc, filename);
 
+void
+set_option (htv, option, value)
+	HTML::Valid htv;
+	SV * option;
+	SV * value;
+CODE:
+	html_valid_set_option (htv, option, value);
+
 void 
 run (htv, html)
 	HTML::Valid htv;

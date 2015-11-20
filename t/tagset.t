@@ -61,9 +61,20 @@ for (qw(
     ok ($isPhraseMarkup{$_}, "<$_> is phrasal (inline)");
 }
 
+ok ($isBlock{p}, "<p> is a block-level element");
+ok (! $isBlock{span}, "<span> is not a block-level element");
+ok ($isTableElement{tr}, "<tr> is a table element");
+ok ($isTableElement{tfoot}, "<tfoot> is a table element");
+ok (! $isTableElement{p}, "<p> is not a table element");
+
 TODO: {
     local $TODO = 'do not include the flagging tags from the tag list';
     ok (! $isKnown{'unknown!'});
 };
 
+TODO: {
+local $TODO = 'implement head-only element hashset';
+eval "\$isHeadOnlyElement{title};";
+ok (! $@);
+};
 done_testing ();

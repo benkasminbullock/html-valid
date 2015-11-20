@@ -8,6 +8,11 @@ typedef enum html_valid_status {
     html_valid_ok,
     html_valid_memory_failure,
     html_valid_tidy_error,
+    html_valid_inconsistency,
+    html_valid_unknown_option,
+    html_valid_bad_option_type,
+    html_valid_undefined_option,
+    html_valid_non_numerical_option,
 }
 html_valid_status_t;
 
@@ -33,7 +38,13 @@ html_valid_create (html_valid_t * htv)
     return html_valid_ok;
 }
 
-/* This is "example.c". */
+#define CALL(x) {				\
+	html_valid_status_t status =		\
+	    html_valid_ ## x;			\
+	if (status != html_valid_ok) {		\
+	    return status;			\
+	}					\
+    }
 
 #define CALL_TIDY(x) {					\
 	int rc;						\
@@ -44,6 +55,13 @@ html_valid_create (html_valid_t * htv)
 	}						\
     }
 
+
+#define CHECK_INIT(htv) {			\
+	if (! htv->tdoc) {			\
+	    warn ("Uninitialized TidyDoc");	\
+	    return html_valid_inconsistency;	\
+	}					\
+    }
 
 static html_valid_status_t
 html_valid_run (html_valid_t * htv, SV * html,
@@ -98,9 +116,81 @@ html_valid_run (html_valid_t * htv, SV * html,
 }
 
 static html_valid_status_t
+html_valid_set_string_option (html_valid_t * htv, const char * coption,
+			      TidyOptionId ti, SV * value)
+{
+    const char * cvalue;
+    STRLEN cvalue_length;
+    if (! SvOK (value)) {
+	warn ("cannot set option '%s' to undefined value",
+	      coption);
+	return html_valid_undefined_option;
+    }
+    cvalue = SvPV (value, cvalue_length);
+    TIDY_CALL (tidyOptSetValue (htv->tdoc, ti, cvalue));
+    return html_valid_ok;
+}
+
+static html_valid_status_t
+html_valid_set_number_option (html_valid_t * htv, const char * coption,
+			      TidyOptionId ti, SV * value)
+{
+    int cvalue;
+    if (! SvOK (value)) {
+	warn ("cannot set option '%s' to undefined value",
+	      coption);
+	return html_valid_undefined_option;
+    }
+    if (! looks_like_number (value) || ! SvIOK (value)) {
+	warn ("option %s expects a numerical value, but you supplied %s",
+	      coption, SvPV_nolen (value));
+	return html_valid_non_numerical_option;
+    }
+    cvalue = SvIV (value);
+    TIDY_CALL (tidyOptSetInt (htv->tdoc, ti, cvalue));
+    return html_valid_ok;
+}
+
+static html_valid_status_t
+html_valid_set_option (html_valid_t * htv, SV * option, SV * value)
+{
+    TidyOption to;
+    TidyOptionType tot;
+    TidyOptionId ti;
+    const char * coption;
+    STRLEN coption_length;
+    CHECK_INIT (htv);
+    coption = SvPV (option, coption_length);
+    to = tidyGetOptionByName(htv->tdoc, coption);
+    if (to == 0) {
+	warn ("unknown option %s", coption);
+	return html_valid_unknown_option;
+    }
+    ti = tidyOptGetId (to);
+    tot = tidyOptGetType (to);
+    switch (tot) {
+    case TidyString:
+	CALL (set_string_option (htv, coption, ti, value));
+	break;
+    case TidyInteger:
+	CALL (set_number_option (htv, coption, ti, value));
+	break;
+    case TidyBoolean:
+	tidyOptSetBool (htv->tdoc, ti, SvTRUE (value));
+	break;
+    default:
+	fprintf (stderr, "%s:%d: bad option type %d from tidy library.\n",
+		 __FILE__, __LINE__, tot);
+	return html_valid_bad_option_type;
+    }
+    return html_valid_ok;
+}
+
+static html_valid_status_t
 html_valid_destroy (html_valid_t * htv)
 {
     tidyRelease (htv->tdoc);
+    htv->tdoc = 0;
     htv->n_mallocs--;
     return html_valid_ok;
 }

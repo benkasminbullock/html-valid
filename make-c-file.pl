@@ -77,7 +77,7 @@ sub write_public_h_file
     print $out $stamp;
     print_h_defines ($out);
 
-    # Order counts here.
+    # The order these are processed matters here.
 
     my @pubhfiles = ("$incdir/tidyplatform.h", "$incdir/tidyenum.h",
 		     "$incdir/tidy.h", "$incdir/tidybuffio.h");

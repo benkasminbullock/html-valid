@@ -179,6 +179,9 @@ for my $tag (@allTags) {
 	$isPhraseMarkup{$tag} = 1;
 	$isInline{$tag} = 1;
     }
+    if ($model & CM_BLOCK) {
+	$isBlock{$tag} = 1;
+    }
     if ($versions & VERS_HTML5) {
 	$isHTML5{$tag} = 1;
     }
