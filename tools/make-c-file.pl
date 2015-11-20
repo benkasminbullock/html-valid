@@ -19,6 +19,10 @@ use C::Utility ':all';
 
 use C::Tokenize '0.10', ':all';
 
+$Bin =~ m!tools/?$! or die;
+my $base = path("$Bin/..");
+chdir "$Bin/../" or die $!;
+
 # If $verbose is true, the program prints various information as
 # it works. The information goes via the routine "msg" below and
 # is printed with the file and line number of the processing.
@@ -55,11 +59,11 @@ sub main
     my $incdir = "$htdir/include";
     my $base = 'tidy-html5';
 
-    my $houtput = "$Bin/$base.h";
+    my $houtput = "$Bin/../$base.h";
     msg ("Writing $houtput");
     write_public_h_file ($incdir, $houtput);
 
-    my $coutput = "$Bin/$base.c";
+    my $coutput = "$Bin/../$base.c";
     msg ("Writing $coutput");
     write_c_files ($srcdir, $coutput);
 }
@@ -93,8 +97,15 @@ sub write_public_h_file
 
     # Add declarations for our extra things.
 
-    system ("cfunctions extra.c") == 0 or die "Error making extra.h";
-    my $extrah = path ("$Bin/extra.h")->slurp_utf8 ();
+    my $hfile = "$base/extra.h";
+    if (-f $hfile) {
+	unlink $hfile or die $!;
+    }
+    system ("cfunctions $base/extra.c") == 0 or die "Error making extra.h";
+    if (! -f $hfile) {
+	die "Create $hfile failed";
+    }
+    my $extrah = path ($hfile)->slurp_utf8 ();
     print $out $extrah;
     close $out;
     chmod 0444, $houtput;
@@ -147,7 +158,7 @@ sub write_c_files
     for my $cfile (@cfiles) {
 	write_c_file ($out, $cfile);
     }
-    my $extra = path ("$Bin/extra.c")->slurp_utf8 ();
+    my $extra = path ("$base/extra.c")->slurp_utf8 ();
     print $out $extra;
     close $out;
     chmod 0444, $coutput;

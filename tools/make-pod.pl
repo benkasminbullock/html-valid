@@ -7,6 +7,11 @@ use Perl::Build 'get_version';
 use Perl::Build::Pod ':all';
 use Deploy qw/do_system older/;
 use Getopt::Long;
+use Path::Tiny;
+
+$Bin =~ m!tools/?$! or die;
+my $base = path ("$Bin/..");
+
 my $ok = GetOptions (
     'force' => \my $force,
     'verbose' => \my $verbose,
@@ -16,14 +21,14 @@ if (! $ok) {
     exit;
 }
 
-my $version = get_version ();
+my $version = get_version (base => $base);
 
 # Names of the input and output files containing the documentation.
 
 my $pod = 'Create.pod';
 my @inputs = (
-    "$Bin/lib/HTML/Valid.pod.tmpl",
-    "$Bin/lib/HTML/Valid/Tagset.pod.tmpl",
+    "$base/lib/HTML/Valid.pod.tmpl",
+    "$base/lib/HTML/Valid/Tagset.pod.tmpl",
 );
 
 # Template toolkit variable holder
@@ -36,10 +41,10 @@ $vars{html_tidy_version} = '5.0.0';
 my $tt = Template->new (
     ABSOLUTE => 1,
     INCLUDE_PATH => [
-	$Bin,
+	$base,
 	pbtmpl (),
-	"$Bin/examples",
-	"$Bin/tmpl",
+	"$base/examples",
+	"$base/tmpl",
     ],
     ENCODING => 'UTF8',
     FILTERS => {
@@ -51,12 +56,12 @@ my $tt = Template->new (
     STRICT => 1,
 );
 
-my @examples = <$Bin/examples/*.pl>;
+my @examples = <$base/examples/*.pl>;
 for my $example (@examples) {
     my $output = $example;
     $output =~ s/\.pl$/-out.txt/;
     if (older ($output, $example) || $force) {
-	do_system ("perl -I$Bin/blib/lib -I$Bin/blib/arch $example > $output", $verbose);
+	do_system ("perl -I$base/blib/lib -I$base/blib/arch $example > $output", $verbose);
     }
 }
 
