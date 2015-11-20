@@ -256,19 +256,21 @@ Possible values for standard are
 
 =item html5
 
+This returns valid attributes for L</HTML5>.
+
 This is the default
 
 =item html4
 
-This returns valid attributes for HTML 4.01.
+This returns valid attributes for L</HTML 4.01>.
 
 =item html3
 
-This returns valid attributes for HTML 3.2.
+This returns valid attributes for L</HTML 3.2>.
 
 =item html2
 
-This returns valid attributes for HTML 2.0.
+This returns valid attributes for L</HTML 2.0>.
 
 =back
 
@@ -381,7 +383,16 @@ paragraph element, like this:
      <table>
 
 is not and was not legal HTML, since <table> itself is a block level
-element. (See L</%isBlock> for testing for block level elements.)
+element, and the HTML rule is that in the above case, if a new block
+level element is seen, a </p> is inserted automatically, so it always
+becomes
+
+     <p>
+     </p>
+     <table>
+
+anyway. See L</%isBlock> for testing for whether an element is a block
+level element.
 
 So in this module, L</@p_closure_barriers> is an empty set.
 

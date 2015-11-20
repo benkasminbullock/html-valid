@@ -110,3 +110,18 @@ void TagAllAttributes (const char ** yes_no)
 	yes_no[i] = attribute_defs[i].name;
     }
 }
+
+void get_option_doc (TidyOptionId ti, const char ** doc, const TidyOptionId ** xrefs)
+{
+    int i;
+    for (i = 0; i < sizeof (option_docs) / sizeof (TidyOptionDoc); i++) {
+	if (ti == option_docs[i].opt) {
+	    * doc = option_docs[i].doc;
+	    * xrefs = option_docs[i].links;
+	    return;
+	}
+    }
+    * doc = 0;
+    * xrefs = 0;
+    fprintf (stderr, "no doc for id %d\n", ti);
+}

@@ -49,7 +49,17 @@ Set the file name for error reporting to F<file.html>.
 
 At this stage, all of the options of L</HTML Tidy> are present, but
 some of these don't make sense for a Perl environment and will be
-disabled.
+disabled. See L</OPTIONS> for a list.
+
+=head1 OPTIONS
+
+The following options can be set with L</set_option>.
+
+=over
+
+[% INCLUDE "options.pod" %]
+
+=back
 
 =head1 SCRIPT
 
@@ -99,6 +109,40 @@ There is another module called HTML::Validator, but it can only found
 on Backpan, dating from 2000. It uses an external XML validating tool.
 
 =back
+
+=head1 BUILD PROCESS
+
+This module is built from L</HTML Tidy> source code using a script
+which converts the HTML Tidy library into a single C file. This is
+available in the github repository as F<tools/make-c-file.pl>, but is
+not included in the CPAN distribution. This also includes extra C
+functions in F<extra.c> into the library to access internals which are
+not part of the public interface. This is used for creating the
+machine-readable file of option documentation included above in
+L</OPTIONS> and for creating the tables of tags and attributes in
+L<HTML::Valid::Tagset>.
+
+As someone who's previously released two modules depending on
+third-party libraries, L<Image::PNG::Libpng> and L<Gzip::Faster>, I've
+had to deal with a lot of problems caused by incompatibilities,
+libraries not found, unknown compilation options, and other things
+which are on other people's computers, and completely beyond my
+control, and often highly mysterious. Based on that experience, and
+taking a hint from the SQLite project and from the L<DBD::SQLite> Perl
+module, I decided to go down the path of making a single C file from
+HTML Tidy, based on a fixed version, and including that in the Perl
+distribution, so that I can have some hope of fixing whatever issues
+happen in compiling the library, and so that if other people want to
+use this module, they won't have to suffer through trying to install
+yet another library.
+
+=head1 SUPPORT
+
+If you have a problem with this module, although it's based on L</HTML
+Tidy>, please report it via this Perl module's issues page first,
+since, although this is not a fork of HTML Tidy, it's possible that
+some part of the build process (see L</BUILD PROCESS>) has caused the
+issue rather than the HTML Tidy library itself.
 
 =head1 AUTHOR
 

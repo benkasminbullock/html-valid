@@ -1,0 +1,7 @@
+# This is a binary from compiling a C file.
+
+get-option-doc
+
+# This is the output from the C file.
+
+options.txt
