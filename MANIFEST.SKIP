@@ -32,3 +32,8 @@ MYMETA..*
 ^make-attr-type-hash\.pl$
 # Users don't need these tests.
 ^xt/.*$
+# Object files
+.*\.o$
+# Build tools
+^tools/.*$
+

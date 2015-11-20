@@ -1,0 +1,49 @@
+=head2 HTML standards
+
+This section gives links to the HTML standards which HTML::Valid supports.
+
+=head3 HTML 2.0
+
+HTML 2.0 was described in RFC ("Request For Comments") 1866, a
+standard of the Internet Engineering Task Force. See
+L<http://www.ietf.org/rfc/rfc1866.txt>.
+
+=head3 HTML 3.2
+
+This was described in the HTML 3.2 Reference Specification. See
+L<http://www.w3.org/TR/REC-html32>. 
+
+=head3 HTML 4.01
+
+This was described in the HTML 4.01 Specification. See
+L<http://www.w3.org/TR/html401/>.
+
+=head3 HTML5
+
+=over
+
+=item Dive into HTML5
+
+L<http://diveintohtml5.info/>.
+
+This isn't a standards document, but "Dive into HTML 5" may be good
+background reading before trying to read the standards documents.
+
+=item HTML: The Living Standard
+
+This is at L<https://developers.whatwg.org/>. It says
+
+=over 
+
+This specification is intended for authors of documents and scripts
+that use the features defined in this specification.
+
+=back
+
+=item HTML5 - A vocabulary and associated APIs for HTML and XHTML
+
+This is at L<http://www.w3.org/TR/html5/>. It's the W3 consortium's
+version of the WHATWG documents.
+
+=back
+

@@ -120,23 +120,19 @@ This is compatible with HTML::Tagset.
 
 =head2 %isHTML2
 
-This is true for elements which are in HTML 2.0, as described in RFC
-1866. See L<http://www.ietf.org/rfc/rfc1866.txt>.
+This is true for elements which are in L</HTML 2.0>.
 
 This is only in HTML::Valid::Tagset, not in HTML::Tagset.
 
 =head2 %isHTML3
 
-This is true for elements which are in HTML 3.2, as described in the
-HTML 3.2 Reference Specification. See
-L<http://www.w3.org/TR/REC-html32>.
+This is true for elements which are in L</HTML 3.2>.
 
 This is only in HTML::Valid::Tagset, not in HTML::Tagset.
 
 =head2 %isHTML4
 
-This is true for elements which are in HTML 4.01, as described in the
-HTML 4.01 Specification. See L<http://www.w3.org/TR/html401/>.
+This is true for elements which are in L</HTML 4.01>.
 
 This is only in HTML::Valid::Tagset, not in HTML::Tagset.
 
@@ -148,15 +144,13 @@ outputs
 
 [% INCLUDE "examples/is-html5-out.txt" | xtidy %]
 
-This is true for elements which are valid in HTML5. See
-L<http://www.w3.org/TR/html5/>, L<https://whatwg.org/>, and, for an
-easier introduction, L<http://diveintohtml5.info/>. It is not true for
-obsolete elements like the <plaintext> tag (see L</%isObsolete>), or
-proprietary elements such as the <blink> tag which have never been
-part of any HTML standard (see L</%isProprietary>). Further, some
-elements neither marked as obsolete nor proprietary are also not
-present in HTML5. For example the <isindex> tag is not present in
-HTML5.
+This is true for elements which are valid in L</HTML5>. It is not
+true for obsolete elements like the <plaintext> tag (see
+L</%isObsolete>), or proprietary elements such as the <blink> tag
+which have never been part of any HTML standard (see
+L</%isProprietary>). Further, some elements neither marked as obsolete
+nor proprietary are also not present in HTML5. For example the
+<isindex> tag is not present in HTML5.
 
 This is only in HTML::Valid::Tagset, not in HTML::Tagset.
 
@@ -344,6 +338,8 @@ This is not implemented in HTML::Valid::Tagset.
 =head2 CPAN modules
 
 L<HTML::Tagset>, L<HTML::Element>, L<HTML::TreeBuilder>, L<HTML::LinkExtor>
+
+[% INCLUDE "html-standards.pod" %]
 
 =head1 EXPORTS
 

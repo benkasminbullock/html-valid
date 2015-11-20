@@ -68,15 +68,19 @@ for my $example (@examples) {
 for my $input (@inputs) {
     my $output = $input;
     $output =~ s/\.tmpl$//;
+    if (-f $output) {
+	chmod 0644, $output or die $!;
+    }
     $tt->process ($input, \%vars, $output, binmode => 'utf8')
         or die '' . $tt->error ();
+    chmod 0444, $output or die $!;
 }
 
 exit;
 
 sub usage
 {
-print <<EOF;
+    print <<EOF;
 --verbose
 --force
 EOF

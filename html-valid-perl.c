@@ -275,3 +275,9 @@ html_valid_all_attributes (AV * av)
     }
     return html_valid_ok;
 }
+
+html_valid_status_t
+html_valid_option_documentation ()
+{
+int i;
+}
