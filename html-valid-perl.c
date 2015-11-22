@@ -141,7 +141,7 @@ html_valid_set_number_option (html_valid_t * htv, const char * coption,
 	      coption);
 	return html_valid_undefined_option;
     }
-    if (! looks_like_number (value) || ! SvIOK (value)) {
+    if (! looks_like_number (value)) {
 	warn ("option %s expects a numerical value, but you supplied %s",
 	      coption, SvPV_nolen (value));
 	return html_valid_non_numerical_option;

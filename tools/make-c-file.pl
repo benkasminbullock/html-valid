@@ -149,9 +149,11 @@ sub write_c_files
 
     write_include ($out);
 
-#    $verbose = 1;
+    $verbose = 1;
 
     write_internal_header_files ($out, \@privhfiles);
+
+    $verbose = undef;
 
     msg ("Including C files");
 
@@ -302,6 +304,12 @@ sub include_h_file
 	msg ("$hfile is already included");
 	return;
     }
+    # Register this header file as included already, before we have
+    # finished writing it, so that if another header file we include
+    # also includes this one, we don't then re-include the file we are
+    # currently reading.
+
+    $hfiles->{$hfile}{included} = 'ok';
     my $orig = $hfiles->{$hfile}{orig};
 
     msg ("Reading $orig");
@@ -331,7 +339,6 @@ sub include_h_file
     }
     $text = remove_typedefs ($text);
     print $out $text;
-    $hfiles->{$hfiles}{included} = 'ok';
 }
 
 sub msg

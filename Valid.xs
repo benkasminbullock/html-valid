@@ -90,3 +90,8 @@ OUTPUT:
 	RETVAL
 
 
+void
+reset (htv)
+	HTML::Valid htv;
+CODE:
+	reset_doc (htv->tdoc);
