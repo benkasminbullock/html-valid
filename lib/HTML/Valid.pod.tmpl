@@ -31,6 +31,13 @@ the distribution.
 
     my $htv = HTML::Valid->new ();
 
+It's also possible to supply options:
+
+    $htv->new (
+        show_body_only => 1,
+        alt_text => 'An image of a polar bear',
+    );
+
 =head2 run
 
     my ($output, $errors) = $htv->run ($content);
@@ -47,9 +54,7 @@ Set the file name for error reporting to F<file.html>.
 
     $htv->set_option ('omit-optional-tags', 1);
 
-At this stage, all of the options of L</HTML Tidy> are present, but
-some of these don't make sense for a Perl environment and will be
-disabled. See L</OPTIONS> for a list.
+Most of the options of L</HTML Tidy> are supported.
 
 =head1 OPTIONS
 

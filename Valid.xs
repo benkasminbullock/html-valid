@@ -29,7 +29,7 @@ CODE:
 	SetFilename (htv->tdoc, filename);
 
 void
-set_option (htv, option, value)
+set_option_unsafe (htv, option, value)
 	HTML::Valid htv;
 	SV * option;
 	SV * value;

@@ -24,7 +24,7 @@ if ($@) {
     $webok = 0;
 }
 
-my $htv = HTML::Valid->new ();
+my $htv = HTML::Valid->new (quiet => 1);
 while (@ARGV) {
     my $file = shift @ARGV;
     if ($file =~ /^--(\S*)/) {
@@ -44,24 +44,23 @@ while (@ARGV) {
 	$content = path ($file)->slurp_utf8 ();
 	$htv->set_filename ($file);
     }
+    elsif ($webok && is_web_uri ($file)) {
+	print "Getting $file from web.\n";
+	$content = get ($file);
+	if (! $content) {
+	    #		my $ua = LWP::UserAgent->new (agent => "Jeepers, Creepers, where'd ya get those peepers");
+	    #		my $reply = $ua->get ($file);
+	    #		if (! $reply->is_success ()) {
+	    #		    print $reply->status_line (), "\n";
+	    warn "Could not download '$file', skipping.\n";
+	    next;
+	}
+	#$content = $reply->decoded_content ();
+	#	    }
+    }
     else {
-	if ($webok && is_web_uri ($file)) {
-	    print "Getting $file from web.\n";
-	    $content = get ($file);
-	    if (! $content) {
-		#		my $ua = LWP::UserAgent->new (agent => "Jeepers, Creepers, where'd ya get those peepers");
-		#		my $reply = $ua->get ($file);
-		#		if (! $reply->is_success ()) {
-		#		    print $reply->status_line (), "\n";
-		warn "Could not download '$file', skipping.\n";
-		next;
-	    }
-	    #$content = $reply->decoded_content ();
-	    #	    }
-	}
-	else {
-	    print "Cannot see file/cannot connect to web.\n";
-	}
+	warn "$0: Cannot find '$file'.\n";
+	next;
     }
     my (undef, $errors) = $htv->run ($content);
     if ($errors) {
@@ -72,7 +71,17 @@ while (@ARGV) {
 #	$errors =~ s/^[0-9]+ warning.*$//gsm;
 #	$errors =~ s/^line ([0-9]+)(.*)/$file:$1: $2/gm;
 	$errors =~ s/^\n//gsm;
-	print $errors;
+    # Work around disordered line numbering in HTML Tidy.
+    my @errors = split /\n/, $errors;
+    my %errors;
+    for (@errors) {
+	my $line = $_;
+	$line =~ s/.*:([0-9]+):[0-9]+:.*$/$1/;
+	$errors{$_} = $line;
+    }
+    @errors = sort {$errors{$a} <=> $errors{$b}} @errors;
+    $errors = join "\n", @errors;
+    print $errors, "\n";
     }
     $htv->reset ();
 }

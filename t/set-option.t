@@ -18,11 +18,11 @@ use HTML::Valid;
     };
     my $htv = HTML::Valid->new ();
     $htv->set_option ('jibberjabber', 'stupid monkey value');
-    ok ($warning);
-    like ($warning, qr/unknown option.*jibberjabber/);
+    ok ($warning, "got warning with bad option");
+    like ($warning, qr/unknown.*option.*jibberjabber/i, "right message for bad option");
     $warning = undef;
     $htv->set_option ('omit-optional-tags', 1);
-    ok (! $warning);
+    ok (! $warning, "no warning with OK option");
 }
 
 done_testing ();

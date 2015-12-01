@@ -123,9 +123,11 @@ sub print_h_defines
 #define PRESERVE_FILE_TIMES 0
 #define HAS_FUTIME 0
 
-/* Undefine this as we do not need any encoding support. */
+/* These are undefined, because we do not need any encoding
+support. */
 
 #undef TIDY_WIN32_MLANG_SUPPORT
+#undef TIDY_ICONV_SUPPORT
 
 /* -------------------------------------------------- */
 
@@ -138,6 +140,18 @@ sub write_c_files
     my @cfiles = <$srcdir/*.c>;
     my @privhfiles = <$srcdir/*.h>;
 
+    # Files not actually used anywhere.
+
+    my $unused = qr/\b
+		       iconvtc\.[ch]
+		   |
+		       (?:attr|tag)ask\.c
+		   |
+		       win32tc\.[ch]
+		   $/x;
+
+    @privhfiles = grep {!/$unused/} @privhfiles;
+
     msg ("Writing output to $coutput");
 
     if (-f $coutput) {
@@ -149,15 +163,17 @@ sub write_c_files
 
     write_include ($out);
 
-    $verbose = 1;
-
     write_internal_header_files ($out, \@privhfiles);
-
-    $verbose = undef;
 
     msg ("Including C files");
 
     for my $cfile (@cfiles) {
+	if ($cfile =~ $unused) {
+	    msg ("Rejecting unused C file $cfile");
+	    # We don't write this file due to skipping the rest of the
+	    # loop body.
+	    next;
+	}
 	write_c_file ($out, $cfile);
     }
     my $extra = path ("$base/extra.c")->slurp_utf8 ();
@@ -183,10 +199,11 @@ sub write_c_file
     # Fix clashes with C names.
     $text =~ s!(DiscardContainer|CleanNode)!$1_$id!g;
 
-    # Apparently most of the declarations of freeFileSource and
-    # initFileSource are dead code, so we mothball all of them except
-    # in the following four files where the function is actually being
-    # used:
+    # Some of the declarations of freeFileSource and initFileSource
+    # don't get compiled under GCC (because a macro called
+    # POSIX_FILE_SOURCES or something like that is equal to 1), so for
+    # the time being we mothball them except in the following four
+    # files:
 
     if ($basename ne 'mappedio.c' && $basename ne 'config.c' &&
 	$basename ne 'streamio.c' && $basename ne 'tidylib.c') {
