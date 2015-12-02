@@ -1,4 +1,4 @@
-[% start_year=2015 %]
+[% start_year=2015 -%]
 =encoding UTF-8
 
 =head1 NAME
@@ -31,7 +31,9 @@ the distribution.
 
     my $htv = HTML::Valid->new ();
 
-It's also possible to supply options:
+Make a new HTML::Valid object.
+
+It's also possible to supply options, as described in L</OPTIONS>:
 
     $htv->new (
         show_body_only => 1,
@@ -42,7 +44,8 @@ It's also possible to supply options:
 
     my ($output, $errors) = $htv->run ($content);
 
-Get the tidy HTML output and errors.
+Get the tidy HTML output and errors. This is basically the same thing
+as running the "tidy" utility with the given options.
 
 =head2 set_filename
 
@@ -58,7 +61,14 @@ Most of the options of L</HTML Tidy> are supported.
 
 =head1 OPTIONS
 
-The following options can be set with L</set_option>.
+The following options can be set with L</set_option>. In this
+documentation they are given with a hyphen, but underscores can also
+be used. Options taking true or false values test for truth or
+falsehood using the standard Perl tests, so empty strings, the
+undefined value, or zero are all valid "false" values.
+
+Please note the following documentation of the options is
+automatically extracted from the L</HTML Tidy> documentation.
 
 =over
 

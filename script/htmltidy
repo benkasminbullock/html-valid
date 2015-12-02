@@ -62,10 +62,11 @@ while (@ARGV) {
 	warn "$0: Cannot find '$file'.\n";
 	next;
     }
-    my (undef, $errors) = $htv->run ($content);
+    my ($output, $errors) = $htv->run ($content);
     if ($errors) {
-	print sanitize_errors ($errors);
+	print STDERR sanitize_errors ($errors);
     }
+    print $output;
     $htv->reset ();
 }
 

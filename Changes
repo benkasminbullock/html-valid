@@ -1,9 +1,9 @@
-0.00_06 2015-11-18
+0.02 2015-12-02
 
-* Can set options
+* Dependency added
+* htmltidy script added
 
-0.00_05 2015-11-18
+0.01 2015-12-02
 
-* Early testing release
-
+* Initial release
 

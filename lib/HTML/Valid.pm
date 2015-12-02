@@ -1,7 +1,7 @@
 package HTML::Valid;
 require Exporter;
 @ISA = qw(Exporter);
-@EXPORT_OK = qw//;
+@EXPORT_OK = qw/sanitize_errors/;
 %EXPORT_TAGS = (
     all => \@EXPORT_OK,
 );
@@ -9,7 +9,7 @@ use warnings;
 use strict;
 use Carp;
 use JSON::Parse 'json_file_to_perl';
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 require XSLoader;
 XSLoader::load ('HTML::Valid', $VERSION);
 
@@ -46,6 +46,32 @@ sub set_option
     else {
 	warn "Unknown or disallowed option $option";
     }
+}
+
+# Private, sort the messy errors from HTML Tidy by line number, and
+# remove useless messages.
+
+sub sanitize_errors
+{
+    my ($errors) = @_;
+    $errors =~ s/Info:.*\n//;
+    $errors =~ s/(?:No|[0-9]+) warnings?\s*(?:and|or|,) (?:[0-9]+ )?errors? were found(?:\.|!)\n//;
+    #	$errors =~ s/^.*missing.*doctype.*\n//gi;
+    $errors =~ s/^\s*$//gsm;
+    #	$errors =~ s/^[0-9]+ warning.*$//gsm;
+    #	$errors =~ s/^line ([0-9]+)(.*)/$file:$1: $2/gm;
+    $errors =~ s/^\n//gsm;
+    # Work around disordered line numbering in HTML Tidy.
+    my @errors = split /\n/, $errors;
+    my %errors;
+    for (@errors) {
+	my $line = $_;
+	$line =~ s/.*:([0-9]+):[0-9]+:.*$/$1/;
+	$errors{$_} = $line;
+    }
+    @errors = sort {$errors{$a} <=> $errors{$b}} @errors;
+    $errors = join "\n", @errors;
+    return $errors . "\n";
 }
 
 1;

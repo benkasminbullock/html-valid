@@ -14,6 +14,7 @@ WriteMakefile (
     AUTHOR => 'Ben Bullock <bkb@cpan.org>',
     LICENSE => 'perl',
     PREREQ_PM => {
+	'JSON::Parse' => 0,
     },
     META_MERGE => {
 	'meta-spec' => {
@@ -33,6 +34,7 @@ WriteMakefile (
     },
     EXE_FILES => [
 	'script/htmlok',
+	'script/htmltidy',
     ],
     MIN_PERL_VERSION => '5.006001',
     OBJECT => 'Valid.o tidy-html5.o',
