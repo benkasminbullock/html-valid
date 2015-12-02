@@ -77,6 +77,25 @@ sub write_public_h_file
     if (-f $houtput) {
 	chmod 0644, $houtput;
     }
+
+    # http://www.cpantesters.org/cpan/report/cc448048-6c71-1014-b8de-e8fd913d07a7
+    # http://www.cpantesters.org/cpan/report/cd68980f-6bf3-1014-8c4c-2e430f17941b
+
+    my $bad_macros = qr/
+			   ^\#\s*define
+			   \s+
+			   (?:
+			       fileno
+			   |
+			       setmode
+			   |
+			       access
+			   )
+			   \s+
+			   .*
+			   $
+		       /xm;
+
     open my $out, ">", $houtput or die $!;
     print $out $stamp;
     print_h_defines ($out);
@@ -90,6 +109,7 @@ sub write_public_h_file
 	my $path = path ($file);
 	my $text = $path->slurp ();
 	$text =~ s!$include_local!/* $1 */!g;
+	$text =~ s!($bad_macros)!/* This wrapper was added by $0. */\n#ifndef PERL_REVISION\n$1\n#endif /* def PERL_REVISION */\n!g;
 	$text = disable_local_variables ($text);
 	$text = remove_typedefs ($text);
 	print $out $text;

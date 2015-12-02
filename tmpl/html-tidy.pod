@@ -12,3 +12,5 @@ is based on this project.
 
 =back
 
+Please note that this is not the Perl module L<HTML::Tidy> by Andy
+Lester, although that module is also based on the above library.

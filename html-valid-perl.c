@@ -6,7 +6,9 @@ html_valid_t;
 
 typedef enum html_valid_status {
     html_valid_ok,
+    /* Malloc or calloc failed. */
     html_valid_memory_failure,
+    /* An upstream error from the library. */
     html_valid_tidy_error,
     html_valid_inconsistency,
     html_valid_unknown_option,
@@ -15,20 +17,6 @@ typedef enum html_valid_status {
     html_valid_non_numerical_option,
 }
 html_valid_status_t;
-
-#if 0
-
-static int
-perl_error_handler (const char * file, int line_number, const char * msg, ...)
-{
-    va_list args;
-    va_start (args, msg);
-    vcroak (msg, & args);
-    va_end (args);
-    return 0;
-}
-
-#endif /* 0 */
 
 static html_valid_status_t
 html_valid_create (html_valid_t * htv)
@@ -127,7 +115,10 @@ html_valid_set_string_option (html_valid_t * htv, const char * coption,
 	return html_valid_undefined_option;
     }
     cvalue = SvPV (value, cvalue_length);
-    TIDY_CALL (tidyOptSetValue (htv->tdoc, ti, cvalue));
+    if (! tidyOptSetValue (htv->tdoc, ti, cvalue)) {
+	warn ("Setting option %d to %s failed", ti, cvalue);
+	return html_valid_tidy_error;
+    }
     return html_valid_ok;
 }
 
@@ -147,7 +138,10 @@ html_valid_set_number_option (html_valid_t * htv, const char * coption,
 	return html_valid_non_numerical_option;
     }
     cvalue = SvIV (value);
-    TIDY_CALL (tidyOptSetInt (htv->tdoc, ti, cvalue));
+    if (! tidyOptSetInt (htv->tdoc, ti, cvalue)) {
+	warn ("Setting option %d to %d failed", ti, cvalue);
+	return html_valid_tidy_error;
+    }
     return html_valid_ok;
 }
 

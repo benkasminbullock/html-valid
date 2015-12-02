@@ -68,7 +68,9 @@ falsehood using the standard Perl tests, so empty strings, the
 undefined value, or zero are all valid "false" values.
 
 Please note the following documentation of the options is
-automatically extracted from the L</HTML Tidy> documentation.
+automatically extracted from the L</HTML Tidy> documentation. Some
+external links in the following documentation are known not to work
+with this version of HTML Tidy.
 
 =over
 
@@ -78,9 +80,12 @@ automatically extracted from the L</HTML Tidy> documentation.
 
 =head1 SCRIPT
 
-There is a script called "htmlok" which runs on files and prints
-errors. It is extremely flaky at the moment. This is an early test
-release.
+There are two scripts, "htmlok", which runs on files or URLs and
+prints errors found to standard output, and "htmltidy", which runs on
+files or URLs and prints the reformatted HTML to standard output, with
+errors going to standard error. To use these scripts with URL
+validation, you need to have L<Data::Validate::URI> and L<LWP::Simple>
+installed.
 
 =head1 SEE ALSO
 
@@ -157,7 +162,12 @@ If you have a problem with this module, although it's based on L</HTML
 Tidy>, please report it via this Perl module's issues page first,
 since, although this is not a fork of HTML Tidy, it's possible that
 some part of the build process (see L</BUILD PROCESS>) has caused the
-issue rather than the HTML Tidy library itself.
+issue rather than the HTML Tidy library itself. Also note that the
+version of L</HTML Tidy> used to build this is going to be the stable
+version released by the project, and thus will lag behind the most
+current version on github. Hence some of the issues with this module
+may already have been reported or even fixed in the most current
+branch.
 
 =head1 AUTHOR
 

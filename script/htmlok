@@ -20,7 +20,7 @@ eval {
 };
 
 if ($@) {
-    print "$@\n";
+#    print "$@\n";
     $webok = 0;
 }
 
