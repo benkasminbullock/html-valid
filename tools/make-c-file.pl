@@ -198,6 +198,24 @@ sub write_c_files
     }
     my $extra = path ("$base/extra.c")->slurp_utf8 ();
     print $out $extra;
+    print $out <<EOF;
+/* This works around compilation problems caused by three layers of
+   macros in the original project. */
+
+#if !SUPPORT_POSIX_MAPPED_FILES
+
+void TY_(freeFileSource)( TidyInputSource* source, Bool closeIt )
+{
+    TY_(freeFileSource_fileio_c) (source, closeIt);
+}
+
+int TY_(initFileSource)(TidyAllocator * allocator, TidyInputSource* source, FILE * fp)
+{
+    return TY_(initFileSource_fileio_c) (allocator, source, fp);
+}
+
+#endif
+EOF
     close $out;
     chmod 0444, $coutput;
 }

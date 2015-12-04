@@ -141,3 +141,4 @@ void reset_doc (TidyDoc tdoc)
     impl->accessErrors = 0;
     impl->docErrors = 0;
 }
+
