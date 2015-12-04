@@ -20,4 +20,10 @@ ok (! -s $filename, "no uncommitted changes");
 if (-f $filename) {
     unlink $filename or die $!;
 }
+system ("chdir $Bin;git branch > $filename");
+my $in = path($filename)->slurp ();
+like ($in, qr/\*\h*master/, "On master branch");
+if (-f $filename) {
+    unlink $filename or die $!;
+}
 done_testing ();
