@@ -7,6 +7,7 @@ use utf8;
 use FindBin '$Bin';
 use Test::More;
 use File::Temp 'tempfile';
+use Path::Tiny;
 my $builder = Test::More->builder;
 binmode $builder->output,         ":utf8";
 binmode $builder->failure_output, ":utf8";
