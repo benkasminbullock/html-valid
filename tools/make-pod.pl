@@ -25,7 +25,6 @@ my $version = get_version (base => $base);
 
 # Names of the input and output files containing the documentation.
 
-my $pod = 'Create.pod';
 my @inputs = (
     "$base/lib/HTML/Valid.pod.tmpl",
     "$base/lib/HTML/Valid/Tagset.pod.tmpl",
