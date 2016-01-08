@@ -3,7 +3,7 @@
 # Make the tidy-html5 library into one big C file for use in a Perl
 # project to validate HTML.
 
-# This file is specific to version 5.0.0 of tidy-html5. The maintainer
+# This file is specific to version 5.1.25 of tidy-html5. The maintainer
 # should expect to have to overhaul this with each new version of
 # tidy-html5, as the changes made here become less relevant.
 
@@ -12,7 +12,11 @@ use strict;
 use utf8;
 use FindBin '$Bin';
 use Path::Tiny;
-
+BEGIN: {
+    use FindBin '$Bin';
+    use lib $Bin;
+    use HVB ':all';
+};
 # This is used for the line directives, but they turned out to be a nuisance.
 
 use C::Utility ':all';
@@ -54,7 +58,11 @@ exit;
 
 sub main
 {
-    my $htdir = '/home/ben/software/tidy-html5-5.0.0';
+    my $html_tidy_version = html_tidy_version ();
+    my $htdir = "/home/ben/software/tidy-html5-$html_tidy_version";
+    if (! -d $htdir) {
+	die "Directory $htdir for version $html_tidy_version does not exist";
+    }
     my $srcdir = "$htdir/src";
     my $incdir = "$htdir/include";
     my $base = 'tidy-html5';

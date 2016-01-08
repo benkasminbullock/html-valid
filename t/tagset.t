@@ -32,7 +32,7 @@ ok (! $isTableElement{a}, "<a> is not among the table elements");
 # This list was poached from HTML::Tagset but I removed isindex from
 # it. Reported as https://rt.cpan.org/Ticket/Display.html?id=109018.
 
-for (qw(title base link meta script style object bgsound)) {
+for (qw(title base link meta script style bgsound)) {
     ok ($isHeadElement{$_}, "<$_> is a head element");
 }
 ok (! $isHeadElement{'a'}, "<a> is not a head element");

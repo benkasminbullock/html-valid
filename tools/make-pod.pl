@@ -8,6 +8,11 @@ use Perl::Build::Pod ':all';
 use Deploy qw/do_system older/;
 use Getopt::Long;
 use Path::Tiny;
+BEGIN: {
+    use FindBin '$Bin';
+    use lib $Bin;
+    use HVB ':all';
+};
 
 $Bin =~ m!tools/?$! or die;
 my $base = path ("$Bin/..");
@@ -35,7 +40,7 @@ my @inputs = (
 my %vars;
 
 $vars{version} = $version;
-$vars{html_tidy_version} = '5.0.0';
+$vars{html_tidy_version} = html_tidy_version ();
 
 my $tt = Template->new (
     ABSOLUTE => 1,
