@@ -51,15 +51,14 @@ open my $out, ">:encoding(utf8)", "$Bin/../tmpl/options.pod" or die $!;
 for (@options) {
     my $doc = $_->{doc};
     # Turn HTML into POD
-    $doc =~ s!<br />!\n\n!g;
-    $doc =~ s!<code>([^<>]*?)</code>!C<$1>!g;
-    $doc =~ s!<code>(.*?)</code>!C<<$1>>!g;
+    $doc =~ s!<br\s*/>!\n\n!g;
+    $doc =~ s!<code>(.*?)</code>!C<< $1 >>!g;
     $doc =~ s!<em>(.*?)</em>!I<$1>!g;
     $doc =~ s!<strong>(.*?)</strong>!B<$1>!g;
-    $doc =~ s!<a\s*href\s*=\s*"(.*?)"\s*>(.*?)</a>!L<$2|$1>!gsm;
-    if ($doc =~ /[^CIBL]<(.*)>/) {
-	warn "HTML tag <$1> remains.\n";
-    }
+    $doc =~ s!<a\s*href\s*=\s*"(.*?)"\s*>\s*(.*?)</a>!L<$2|$1>!gsm;
+#    if ($doc =~ /[^CIBL]<(.*)>/ ) {
+#	warn "HTML tag <$1> remains.\n";
+#    }
     # Remove HTML entities.
     $doc = decode_entities ($doc);
     print $out <<EOF;

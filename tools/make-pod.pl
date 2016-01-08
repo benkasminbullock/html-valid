@@ -3,7 +3,7 @@ use warnings;
 use strict;
 use Template;
 use FindBin '$Bin';
-use Perl::Build 'get_version';
+use Perl::Build qw/get_version get_commit/;
 use Perl::Build::Pod ':all';
 use Deploy qw/do_system older/;
 use Getopt::Long;
@@ -25,8 +25,9 @@ if (! $ok) {
     usage ();
     exit;
 }
-
-my $version = get_version (base => $base);
+my %inputs = (base => $base);
+my $version = get_version (%inputs);
+my $commit = get_commit (%inputs);
 
 # Names of the input and output files containing the documentation.
 
@@ -40,6 +41,7 @@ my @inputs = (
 my %vars;
 
 $vars{version} = $version;
+$vars{commit} = $commit;
 $vars{html_tidy_version} = html_tidy_version ();
 
 my $tt = Template->new (
