@@ -36,4 +36,4 @@ MYMETA..*
 .*\.o$
 # Build tools
 ^tools/.*$
-
+^config\.txt$

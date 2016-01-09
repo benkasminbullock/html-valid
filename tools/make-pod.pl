@@ -74,6 +74,11 @@ for my $example (@examples) {
 #system ("$Bin/make-options.pl") == 0 or die "make-options.pl failed";
 
 for my $input (@inputs) {
+    my $module = $input;
+    $module =~ s/\.pod.*$//;
+    $module =~ s!^.*lib/!!;
+    $module =~ s!/!::!g;
+    $vars{module} = $module;
     my $output = $input;
     $output =~ s/\.tmpl$//;
     if (-f $output) {
