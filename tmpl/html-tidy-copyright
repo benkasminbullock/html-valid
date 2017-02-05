@@ -30,9 +30,5 @@ HTML::Valid is based on HTML Tidy, which is under the following copyright:
     3. This Copyright notice may not be removed or altered from any
     source or altered source distribution.
 
-The Perl parts of this distribution are copyright (C) 2015 Ben Bullock
-and may be used under either the above licence terms, or the usual
-Perl conditions, either the GNU General Public Licence or the Perl
-Artistic Licence.
 
 

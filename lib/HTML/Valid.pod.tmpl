@@ -1,4 +1,15 @@
-[% start_year=2015 -%]
+[% start_year=2012 %]
+[% MACRO example(file) BLOCK %]
+[%- pl = file _ ".pl" -%]
+[%- out = file _ "-out.txt" -%]
+[% INCLUDE $pl | xtidy %]
+
+produces output
+
+[% INCLUDE $out | xtidy %]
+
+(This example is included as L<F<[% pl %]>|https://api.metacpan.org/source/BKB/[% info.name %]-[% info.version %]/examples/[% pl %]> in the distribution.)
+[% END %]
 =encoding UTF-8
 
 =head1 NAME
@@ -188,3 +199,4 @@ Ben Bullock <bkb@cpan.org>
 
 [% INCLUDE "html-tidy-copyright" %]
 
+[% INCLUDE "html-valid-author.pod.tmpl" %]

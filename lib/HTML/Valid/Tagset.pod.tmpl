@@ -1,14 +1,23 @@
+[% MACRO example(file) BLOCK %]
+[%- pl = file _ ".pl" -%]
+[%- out = file _ "-out.txt" -%]
+[% INCLUDE $pl | xtidy %]
+
+produces output
+
+[% INCLUDE $out | xtidy %]
+
+(This example is included as L<F<[% pl %]>|https://api.metacpan.org/source/BKB/[% info.name %]-[% info.version %]/examples/[% pl %]> in the distribution.)
+[% END %]
 =head1 NAME
 
 HTML::Valid::Tagset - data tables useful in parsing HTML
 
-[% INCLUDE "version.pod" %]
-
 =head1 SYNOPSIS
 
-  use HTML::Valid::Tagset;
-  # Then use any of the items in the HTML::Valid::Tagset package
-  #  as need arises
+[% example("tagset-example") %]
+
+[% INCLUDE "version.pod" %]
 
 =head1 DESCRIPTION
 
@@ -459,3 +468,4 @@ However, the bulk of HTML::Valid::Tagset is not a fork of
 HTML::Tagset, it is based on L</HTML Tidy>.
 
 [% INCLUDE "html-tidy-copyright" %]
+[% INCLUDE "html-valid-author.pod.tmpl" %]

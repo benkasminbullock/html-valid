@@ -1,0 +1,11 @@
+[% start_year=2015 %]
+[% this_year=2017 %]
+The Perl parts of this distribution are copyright (C) 
+[% IF this_year != start_year -%]
+[%- start_year %]-[% this_year -%]
+[%- ELSE -%]
+[%- this_year -%]
+[%- END %]
+Ben Bullock and may be used under either the above licence terms, or
+the usual Perl conditions, either the GNU General Public Licence or
+the Perl Artistic Licence.
