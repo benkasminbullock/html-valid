@@ -110,14 +110,14 @@ void TagAllAttributes (const char ** yes_no)
 	yes_no[i] = attribute_defs[i].name;
     }
 }
-
+#if 0
 void get_option_doc (TidyOptionId ti, const char ** doc, const TidyOptionId ** xrefs)
 {
     int i;
-    for (i = 0; i < sizeof (option_docs) / sizeof (TidyOptionDoc); i++) {
-	if (ti == option_docs[i].opt) {
-	    * doc = option_docs[i].doc;
-	    * xrefs = option_docs[i].links;
+    for (i = 0; i < sizeof (option_defs) / sizeof (TidyOptionDoc); i++) {
+	if (ti == option_defs[i].opt) {
+	    * doc = option_defs[i].doc;
+	    * xrefs = option_defs[i].links;
 	    return;
 	}
     }
@@ -142,3 +142,4 @@ void reset_doc (TidyDoc tdoc)
     impl->docErrors = 0;
 }
 
+#endif /* 0 */

@@ -89,9 +89,13 @@ CODE:
 OUTPUT:
 	RETVAL
 
+#if 0
 
 void
 reset (htv)
 	HTML::Valid htv;
 CODE:
 	reset_doc (htv->tdoc);
+
+#endif /* 0 */
+

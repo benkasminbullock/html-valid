@@ -21,6 +21,7 @@ for (@lines) {
 }
 sub html_tidy_version
 {
-return $vars{'html-tidy-version'};
+    return $vars{'html-tidy-version'};
 }
+
 1;
