@@ -1,3 +1,6 @@
+[% MACRO repo(file) BLOCK -%]
+L<F<[% file %]>|[% info.repo %]/[% commit.commit %]/[% file %]>
+[%- END %]
 [% MACRO example(file) BLOCK %]
 [%- pl = file _ ".pl" -%]
 [%- out = file _ "-out.txt" -%]
@@ -83,6 +86,9 @@ automatically extracted from the L</HTML Tidy> documentation.
 
 =back
 
+(The above options were generated from the documentation of HTML Tidy
+5.1.25, so they may be outdated relative to the current version.)
+
 =head1 SCRIPT
 
 There are two scripts, "htmlok", which runs on files or URLs and
@@ -155,40 +161,13 @@ A small HTML validator: really all this does is make sure your tags are balanced
 
 This module is built from L</HTML Tidy> source code using a script
 which converts the HTML Tidy library into a single C file. This is
-available in the github repository as F<tools/make-c-file.pl>, but is
-not included in the CPAN distribution. This also includes extra C
-functions in F<extra.c> into the library to access internals which are
-not part of the public interface. This is used for creating the
-machine-readable file of option documentation included above in
-L</OPTIONS> and for creating the tables of tags and attributes in
-L<HTML::Valid::Tagset>.
-
-As someone who's previously released two modules depending on
-third-party libraries, L<Image::PNG::Libpng> and L<Gzip::Faster>, I've
-had to deal with a lot of problems caused by incompatibilities,
-libraries not found, unknown compilation options, and other things
-which are on other people's computers, and completely beyond my
-control, and often highly mysterious. Based on that experience, and
-taking a hint from the SQLite project and from the L<DBD::SQLite> Perl
-module, I decided to go down the path of making a single C file from
-HTML Tidy, based on a fixed version, and including that in the Perl
-distribution, so that I can have some hope of fixing whatever issues
-happen in compiling the library, and so that if other people want to
-use this module, they won't have to suffer through trying to install
-yet another library.
-
-=head1 SUPPORT
-
-If you have a problem with this module, although it's based on L</HTML
-Tidy>, please report it via this Perl module's issues page first,
-since, although this is not a fork of HTML Tidy, it's possible that
-some part of the build process (see L</BUILD PROCESS>) has caused the
-issue rather than the HTML Tidy library itself. Also note that the
-version of L</HTML Tidy> used to build this is going to be the stable
-version released by the project, and thus will lag behind the most
-current version on github. Hence some of the issues with this module
-may already have been reported or even fixed in the most current
-branch.
+available in the github repository as [% repo("tools/make-c-file.pl")
+%], but is not in the CPAN distribution. This also includes extra C
+functions in [% repo("extra.c") %] into the library to access
+internals which are not part of the public interface. This is used for
+creating the machine-readable file of option documentation included
+above in L</OPTIONS> and for creating the tables of tags and
+attributes in L<HTML::Valid::Tagset>.
 
 =head1 AUTHOR
 
