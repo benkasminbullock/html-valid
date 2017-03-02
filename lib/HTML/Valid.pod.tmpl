@@ -1,5 +1,5 @@
 [% MACRO repo(file) BLOCK -%]
-L<F<[% file %]>|[% info.repo %]/[% commit.commit %]/[% file %]>
+L<F<[% file %]>|[% info.repo %]/blob/[% commit.commit %]/[% file %]>
 [%- END %]
 [% MACRO example(file) BLOCK %]
 [%- pl = file _ ".pl" -%]

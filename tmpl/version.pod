@@ -1,7 +1,8 @@
 =head1 VERSION
 
-This document describes [% module %] version [% version %]
-corresponding to git commit [% commit.commit %]. This Perl module is
-built on top of the L</HTML Tidy> library version [% html_tidy_version
-%].
+This documents [% module %] version [% info.version %]
+corresponding to git commit L<[% commit.commit %]|[% info.repo
+%]/commit/[% commit.commit %]> released on [% commit.date %].
 
+This Perl module is built on top of the L</HTML Tidy> library version
+[% html_tidy_version -%].
