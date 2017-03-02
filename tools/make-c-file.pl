@@ -3,7 +3,7 @@
 # Make the tidy-html5 library into one big C file for use in a Perl
 # project to validate HTML.
 
-# This file is specific to version 5.2.0 of tidy-html5. The maintainer
+# This file is specific to version 5.4.0 of tidy-html5. The maintainer
 # should expect to have to overhaul this with each new version of
 # tidy-html5, as the changes made here become less relevant.
 
@@ -138,7 +138,8 @@ sub write_public_h_file
     for my $file (@pubhfiles) {
 	my $path = path ($file);
 	my $text = $path->slurp ();
-	$text =~ s!$include_local!/* $1 */!g;
+	$text =~ s!^(#include\s*"[^"]+")!/* $1 */!gm;
+	die if $text =~ /^#include\s*"/m;
 	$text =~ s!($bad_macros)!/* This wrapper was added by $0. */\n#ifndef PERL_REVISION\n$1\n#endif /* def PERL_REVISION */\n!g;
 	$text = disable_local_variables ($text);
 	$text = remove_typedefs ($text);
@@ -273,7 +274,8 @@ sub write_c_file
     if ($line_directives) {
     	line_directive ($out, 1, $basename);
     }
-    $text =~ s!$include_local!/* $1 */!g;
+    $text =~ s!^(#include\s*"[^"]+")!/* $1 */!gm;
+    die if $text =~ /^#include\s*"/m;
     # Fix clashes with C names.
     $text =~ s!(DiscardContainer|CleanNode)!$1_$id!g;
 
@@ -427,7 +429,7 @@ sub include_h_file
 
     # Include all the previous includes into this file.
 
-    while ($text =~ s!$include_local!/* $1 */!g) {
+    while ($text =~ s!^(#include\s*"([^"]+)")!/* $1 */!gm) {
 	my $dephfile = $2;
 #	if ($dephfile =~ /^tidy.*\.h$/ && $dephfile ne 'tidy-int.h') {
 #	    msg ("Not including <tidy*.h> file $dephfile");
@@ -441,6 +443,7 @@ sub include_h_file
 	    include_h_file ($out, $dephfile, $hfiles, $verbose);
 	}
     }
+    die if $text =~ /^#include/m;
     my $basename = $path->basename ();
     if ($line_directives) {
 	line_directive ($out, 1, $basename);
