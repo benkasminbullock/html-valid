@@ -56,8 +56,9 @@ compatibility with HTML::Tagset refers to HTML::Tagset version 3.20.
 
 =head2 @allTags
 
-This contains all the tags as an array. The tags are sorted in
-order. It is exactly the same thing as the keys of L</%isKnown>.
+This contains all the HTML tags that this module knows of as an array
+sorted in alphabetical order. It is exactly the same thing as the keys
+of L</%isKnown>.
 
 This is only in HTML::Valid::Tagset, not in HTML::Tagset.
 
@@ -126,19 +127,22 @@ This is compatible with HTML::Tagset.
 
 =head2 %isHTML2
 
-This is true for elements which are in L</HTML 2.0>.
+This hashset is true for elements which are part of the L</HTML 2.0>
+standard.
 
 This is only in HTML::Valid::Tagset, not in HTML::Tagset.
 
 =head2 %isHTML3
 
-This is true for elements which are in L</HTML 3.2>.
+This hashset is true for elements which are part of the L</HTML 3.2>
+standard.
 
 This is only in HTML::Valid::Tagset, not in HTML::Tagset.
 
 =head2 %isHTML4
 
-This is true for elements which are in L</HTML 4.01>.
+This hashset is true for elements which are part of the L</HTML 4.01>
+standard.
 
 This is only in HTML::Valid::Tagset, not in HTML::Tagset.
 
@@ -150,8 +154,8 @@ outputs
 
 [% INCLUDE "examples/is-html5-out.txt" | xtidy %]
 
-This is true for elements which are valid in L</HTML5>. It is not
-true for obsolete elements like the <plaintext> tag (see
+This is true for elements which are valid HTML tags in L</HTML5>. It
+is not true for obsolete elements like the <plaintext> tag (see
 L</%isObsolete>), or proprietary elements such as the <blink> tag
 which have never been part of any HTML standard (see
 L</%isProprietary>). Further, some elements neither marked as obsolete
