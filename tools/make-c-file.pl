@@ -68,6 +68,7 @@ exit;
 
 sub main
 {
+    # This is from HVB.pm, which reads in ../config.txt.
     my $html_tidy_version = html_tidy_version ();
     my $htdir = "/home/ben/software/tidy-html/tidy-html5-$html_tidy_version";
     if (! -d $htdir) {
@@ -108,19 +109,19 @@ sub write_public_h_file
     # http://www.cpantesters.org/cpan/report/cd68980f-6bf3-1014-8c4c-2e430f17941b
 
     my $bad_macros = qr/
-			   ^\#\s*define
-			   \s+
-			   (?:
-			       fileno
-			   |
-			       setmode
-			   |
-			       access
-			   )
-			   \s+
-			   .*
-			   $
-		       /xm;
+	^\#\s*define
+	\s+
+	(?:
+	    fileno
+	|
+	    setmode
+	|
+	    access
+	)
+	\s+
+	.*
+	$
+    /xm;
 
     open my $out, ">", $houtput or die $!;
     print $out $stamp;
@@ -194,13 +195,15 @@ sub write_c_files
 
     # Files not actually used anywhere.
 
-    my $unused = qr/\b
-		       iconvtc\.[ch]
-		   |
-		       (?:attr|tag)ask\.c
-		   |
-		       win32tc\.[ch]
-		   $/x;
+    my $unused = qr/
+	\b
+	iconvtc\.[ch]
+    |
+	(?:attr|tag)ask\.c
+    |
+	win32tc\.[ch]
+	$
+    /x;
 
     @privhfiles = grep {!/$unused/} @privhfiles;
 
