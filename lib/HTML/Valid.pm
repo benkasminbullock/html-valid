@@ -9,7 +9,7 @@ use warnings;
 use strict;
 use Carp;
 use JSON::Parse 'read_json';
-our $VERSION = '0.07_02';
+our $VERSION = '0.08';
 require XSLoader;
 XSLoader::load ('HTML::Valid', $VERSION);
 
