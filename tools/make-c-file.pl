@@ -3,7 +3,7 @@
 # Make the tidy-html5 library into one big C file for use in a Perl
 # project to validate HTML.
 
-# This file is specific to version 5.6.0 of tidy-html5. The maintainer
+# This file is specific to version 5.7.28 of tidy-html5. The maintainer
 # should expect to have to overhaul this with each new version of
 # tidy-html5, as the changes made here become less relevant.
 
@@ -23,6 +23,8 @@ use C::Utility ':all';
 
 use C::Tokenize '0.10', ':all';
 use Getopt::Long;
+
+my $inc = qr!#\s*include\s*"([^"]+)"!;
 
 $Bin =~ m!tools/?$! or die;
 my $base = path("$Bin/..");
@@ -138,11 +140,12 @@ sub write_public_h_file
     for my $file (@pubhfiles) {
 	my $path = path ($file);
 	my $text = $path->slurp ();
-	$text =~ s!^(#include\s*"[^"]+")!/* $1 */!gm;
-	die if $text =~ /^#include\s*"/m;
+	$text =~ s!^($inc)!/* $1 */!gm;
+	die if $text =~ /^($inc)/m;
 	$text =~ s!($bad_macros)!/* This wrapper was added by $0. */\n#ifndef PERL_REVISION\n$1\n#endif /* def PERL_REVISION */\n!g;
 	$text = disable_local_variables ($text);
 	$text = remove_typedefs ($text);
+	$text = remove_lf_cr_macros ($text);
 	print $out $text;
     }
 
@@ -230,8 +233,6 @@ EOF
 
     write_include ($out);
 
-
-
     write_internal_header_files ($out, \@privhfiles);
 
     msg ("Including C files");
@@ -282,8 +283,8 @@ sub write_c_file
     if ($line_directives) {
     	line_directive ($out, 1, $basename);
     }
-    $text =~ s!^(#include\s*"[^"]+")!/* $1 */!gm;
-    die if $text =~ /^#include\s*"/m;
+    $text =~ s!^($inc)!/* $1 */!gm;
+    die if $text =~ /^$inc/m;
     # Fix clashes with C names.
     $text =~ s!(DiscardContainer|CleanNode)!$1_$id!g;
 
@@ -319,7 +320,18 @@ sub write_c_file
     $text = disable_local_variables ($text);
     $text = remove_typedefs ($text);
 
+    $text = remove_lf_cr_macros ($text);
+
     print $out $text;
+}
+
+sub remove_lf_cr_macros
+{
+    my ($text) = @_;
+    $text =~ s!^(#define\s+(LF|CR)\s+.*)!/* $1 */!gm;
+    $text =~ s!\bLF\b!'\\n'!g;
+    $text =~ s!\bCR\b!'\\r'!g;
+    return $text;
 }
 
 # Remove typedefs for "uint" and "ulong".
@@ -437,7 +449,7 @@ sub include_h_file
 
     # Include all the previous includes into this file.
 
-    while ($text =~ s!^(#include\s*"([^"]+)")!/* $1 */!gm) {
+    while ($text =~ s!^($inc)!/* $1 */!gm) {
 	my $dephfile = $2;
 #	if ($dephfile =~ /^tidy.*\.h$/ && $dephfile ne 'tidy-int.h') {
 #	    msg ("Not including <tidy*.h> file $dephfile");
@@ -451,12 +463,13 @@ sub include_h_file
 	    include_h_file ($out, $dephfile, $hfiles, $verbose);
 	}
     }
-    die if $text =~ /^#include/m;
+    die if $text =~ /^$inc/m;
     my $basename = $path->basename ();
     if ($line_directives) {
 	line_directive ($out, 1, $basename);
     }
     $text = remove_typedefs ($text);
+    $text = remove_lf_cr_macros ($text);
     print $out $text;
 }
 

@@ -1,7 +1,5 @@
 HTML::Valid is based on HTML Tidy, which is under L<the following copyright|https://github.com/htacg/tidy-html5/blob/next/README/LICENSE.md>:
 
-=over
-
 =head2 HTML Tidy
 
 =head3 HTML parser and pretty printer
