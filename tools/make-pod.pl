@@ -8,6 +8,7 @@ use Perl::Build::Pod ':all';
 use Deploy qw/do_system older/;
 use Getopt::Long;
 use Path::Tiny;
+use JSON::Parse 'read_json';
 BEGIN: {
     use FindBin '$Bin';
     use lib $Bin;
@@ -15,7 +16,8 @@ BEGIN: {
 };
 
 $Bin =~ m!tools/?$! or die;
-my $base = path ("$Bin/..");
+my $basedir = "$Bin/..";
+my $base = path ($basedir);
 
 my $ok = GetOptions (
     'force' => \my $force,
@@ -44,6 +46,7 @@ $vars{version} = $version;
 $vars{info} = $info;
 $vars{commit} = $commit;
 $vars{html_tidy_version} = html_tidy_version ();
+$vars{mod2info} = mod2info ("$base/see-also-info.json");
 
 my $tt = Template->new (
     ABSOLUTE => 1,

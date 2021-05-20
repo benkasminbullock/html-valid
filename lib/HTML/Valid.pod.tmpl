@@ -127,14 +127,33 @@ New W3 Consortium validator.
 =back
 
 =head2 CPAN modules
+[% star = "⭐" %] 
+[% MACRO cpm(module) BLOCK %]
+=item L<[% module %]>
+[% IF mod2info.defined(module) %]
+[% info = mod2info.$module %]
+[
+[%- IF info.log_fav > 0 -%]
+[% star.repeat(info.log_fav) %] [% END -%]
+Author: L<[% info.author %]|https://metacpan.org/author/[% info.author %]>; Date: C<[% info.date %]>; Version: C<[% info.version %]>]
+[% END %]
+[% END %]
 
 =over
 
-=item L<HTML::Tidy>
+[% cpm('Alien::TidyHTML5') %]
 
-=item L<HTML::Lint>
+[% cpm('HTML::Lint') %]
 
-=item L<HTML::Normalize>
+[% cpm('HTML::Normalize') %]
+
+[% cpm('HTML::T5') %]
+
+[% cpm('HTML::Tagset') %]
+
+[% cpm('HTML::Tidy') %]
+
+[% cpm('HTML::Tidy5') %]
 
 =item HTML::Validator
 
