@@ -8,7 +8,6 @@ use Perl::Build::Pod ':all';
 use Deploy qw/do_system older/;
 use Getopt::Long;
 use Path::Tiny;
-use JSON::Parse 'read_json';
 BEGIN: {
     use FindBin '$Bin';
     use lib $Bin;
