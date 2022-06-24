@@ -3,7 +3,7 @@
 # Make the tidy-html5 library into one big C file for use in a Perl
 # project to validate HTML.
 
-# This file is specific to version 5.7.28 of tidy-html5. The maintainer
+# This file is specific to version 5.8.0 of tidy-html5. The maintainer
 # should expect to have to overhaul this with each new version of
 # tidy-html5, as the changes made here become less relevant.
 

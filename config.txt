@@ -1,1 +1,1 @@
-html-tidy-version: 5.7.28
+html-tidy-version: 5.8.0
