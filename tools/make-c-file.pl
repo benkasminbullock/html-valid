@@ -223,9 +223,14 @@ sub write_c_files
 
     print $out $stamp;
 
+    # <limits.h>:
     # In version 5.6.0, UINT_MAX gets incorporated, but HTML tidy
     # doesn't seem to pull in this header file.
+    # <sys/stat.h>:
+    # In version 5.8.0 similar to above
     print $out <<EOF;
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <limits.h>
 EOF
 

@@ -1,6 +1,7 @@
-0.08_01 2022-06-24
+0.08_02 2022-06-28
 
 * Underlying library updated to 5.8.0
+* #include <sys/stat.h> for Windows build
 
 0.08 2021-05-20
 

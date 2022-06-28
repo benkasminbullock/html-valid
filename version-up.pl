@@ -8,8 +8,8 @@ my $td = Trav::Dir->new (
     no_trav => qr!\bblib\b!,
     rejfile => qr!HVB|Tagset!,
 );
-my $old = '0.08';
-my $new = '0.08_01';
+my $old = '0.08_01';
+my $new = '0.08_02';
 if ($old =~ /_/) {
     my $changes = "$Bin/Changes";
     my $date = make_date ('-');
