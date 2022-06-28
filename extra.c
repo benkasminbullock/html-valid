@@ -110,36 +110,5 @@ void TagAllAttributes (const char ** yes_no)
 	yes_no[i] = attribute_defs[i].name;
     }
 }
-#if 0
-void get_option_doc (TidyOptionId ti, const char ** doc, const TidyOptionId ** xrefs)
-{
-    int i;
-    for (i = 0; i < sizeof (option_defs) / sizeof (TidyOptionDoc); i++) {
-	if (ti == option_defs[i].opt) {
-	    * doc = option_defs[i].doc;
-	    * xrefs = option_defs[i].links;
-	    return;
-	}
-    }
-    * doc = 0;
-    * xrefs = 0;
-    fprintf (stderr, "no doc for id %d\n", ti);
-}
 
-/* Reset the error counters back to zero. This doesn't seem to be
-   available in the API, so after parsing a file with an error, the
-   next file is listed as having an error too. Thus basically a tdoc
-   becomes non-functional after reading a file with an error. It seems
-   too obvious a bug to have been neglected, but I cannot find
-   anywhere in the API which does this trivial task. */
 
-void reset_doc (TidyDoc tdoc)
-{
-    TidyDocImpl* impl = tidyDocToImpl( tdoc );
-    impl->errors = 0;
-    impl->warnings = 0;
-    impl->accessErrors = 0;
-    impl->docErrors = 0;
-}
-
-#endif /* 0 */

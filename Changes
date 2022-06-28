@@ -1,7 +1,9 @@
-0.08_02 2022-06-28
+0.09 2022-06-29
 
 * Underlying library updated to 5.8.0
-* #include <sys/stat.h> for Windows build
+** #include <sys/stat.h> for Windows build
+* Removed "reset" function from htmlok script 
+* Other work on htmlok
 
 0.08 2021-05-20
 
